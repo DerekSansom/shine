@@ -1,0 +1,60 @@
+package com.sp.auth;
+
+import java.io.IOException;
+import java.util.Arrays;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.filter.GenericFilterBean;
+
+import com.sp.security.Role;
+import com.sp.security.SpAuthority;
+import com.sp.security.StreetPinAuth;
+import com.sp.security.StreetPinUserDetails;
+
+public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
+	// @Autowired
+	// UserService userService;
+	// @Autowired
+	// TokenUtils tokenUtils;
+	AuthenticationManager authManager;
+
+	public AuthenticationTokenProcessingFilter(AuthenticationManager authManager) {
+		this.authManager = authManager;
+	}
+
+	@Override
+	public void doFilter(ServletRequest request, ServletResponse response,
+			FilterChain chain) throws IOException, ServletException {
+
+		// Map<String, String[]> parms = request.getParameterMap();
+		boolean valid = true;
+
+		if (valid) {
+			// String token = parms.get("token")[0]; // grab the first "token"
+													// parameter
+
+			// validate the token
+			// if (tokenUtils.validate(token)) {
+			if (true) {
+				// determine the user based on the (already validated) token
+				String role = Role.PLAYER;
+				SpAuthority spauth = new SpAuthority(role);
+
+				StreetPinUserDetails userDetails = new StreetPinUserDetails("testUser", Arrays.asList(spauth), "", 10);
+				StreetPinAuth spauAuth = new StreetPinAuth(userDetails, Arrays.asList(spauth));
+				spauAuth.setAuthenticated(true);
+
+				// set the authentication into the SecurityContext
+				SecurityContextHolder.getContext().setAuthentication(spauAuth);
+			}
+		}
+		// continue thru the filter chain
+		chain.doFilter(request, response);
+	}
+}

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+	<appender name="console" class="org.apache.log4j.ConsoleAppender">
+		<param name="Target" value="System.out" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{dd-MMM-yyyy HH:mm:ss,SSS} %-5p %c{1} - %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="shinefile" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${catalina.home}/logs/shine.log" />
+		<param name="MaxFileSize" value="1000KB" />
+		<param name="MaxBackupIndex" value="10" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{dd MMM yyyy HH:mm:ss} %-5p %c{1} - %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="shineLocatorfile" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${catalina.home}/logs/shineLocator.log" />
+		<param name="MaxFileSize" value="1000KB" />
+		<param name="MaxBackupIndex" value="10" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{dd MMM yyyy HH:mm:ss} %-5p %c{1} - %m%n" />
+		</layout>
+	</appender>
+
+
+	<logger name="shine" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="shinefile" />
+	</logger>
+
+	<logger name="shine.util.MapBoardLocationsTask" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="shineLocatorfile" />
+	</logger>
+
+	<root>
+		<priority value="info" />
+		<appender-ref ref="shinefile" />
+	</root>
+
+
+
+</log4j:configuration>

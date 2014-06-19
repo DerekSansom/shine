@@ -1,0 +1,36 @@
+package shine.app;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import shine.app.mapper.BrandMapper;
+
+import com.shine.boards.CorpBrand;
+import com.sp.brand.BrandDao;
+import com.sp.user.UserDao;
+
+@Component
+public class BrandManager {
+	
+	@Autowired
+	private UserDao userDao;
+	
+	@Autowired
+	private BrandMapper mapper;
+	
+	@Autowired
+	private BrandDao brandDao;
+	
+	public List<CorpBrand> getBrandsForUserId(int userId) {
+		try{
+			List<CorpBrand> brands = mapper.entityToDto(brandDao.getBrandsByCompany(1));
+			return brands;
+		}catch(Exception e){
+			//log.error("Failed to retrieve brands for user", e);
+			throw new RuntimeException("Could not retrieve brands for user", e);
+		}
+	}
+}
+

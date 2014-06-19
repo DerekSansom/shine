@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+          "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+          "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	<session-factory>
+		<!-- Database connection settings -->
+		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="connection.url">jdbc:mysql://localhost/shine</property>
+        <property name="connection.username">shinemysqluser</property>
+        <property name="connection.password">wr1ghtsl@ne</property>
+		<property name="connection.useUnicode">true</property>
+		<property name="connection.characterEncoding">UTF-8</property>
+
+		<!-- JDBC connection pool (use the built-in) <property name="connection.pool_size">1</property> -->
+		<property name="c3p0.min_size">5</property>
+		<property name="c3p0.max_size">20</property>
+		<property name="c3p0.timeout">1800</property>
+		<property name="c3p0.max_statements">50</property>
+
+		<property name="connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
+		<property name="c3p0.acquire_increment">1</property> 	
+		<property name="c3p0.idle_test_period">100</property> <!-- seconds --> 
+		<property name="c3p0.timeout">1800</property>
+		<!-- SQL dialect -->
+		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+
+		<!-- Echo all executed SQL to stdout -->
+		<property name="show_sql">false</property>
+
+		<!-- Mappings -->
+		<!-- Objects for tracking -->
+
+		<!-- Game Objects 
+		<mapping resource="Diamond.hbm.xml" />
+		<mapping resource="Sapphire.hbm.xml" />
+		<mapping resource="Ruby.hbm.xml" />
+		<mapping resource="Emerald.hbm.xml" />
+		<mapping resource="Player_Emerald.hbm.xml" />
+		<mapping resource="Player_Ruby.hbm.xml" />
+		<mapping resource="Player_Sapphire.hbm.xml" />
+		<mapping resource="Player_Diamond.hbm.xml" />
+-->
+	</session-factory>
+</hibernate-configuration>
+

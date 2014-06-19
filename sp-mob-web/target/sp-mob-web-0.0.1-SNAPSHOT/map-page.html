@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+<link rel="apple-touch-icon" href="./images/streetpin-logo-glow.png">
+<link rel="apple-touch-icon" sizes="72x72" href="./images/streetpin-logo-glow.png">
+<link rel="apple-touch-icon" sizes="114x114" href="./images/streetpin-logo-glow.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>map-page.html</title>
+
+<!--JQs-->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.2.0-alpha.1/jquery.mobile-1.2.0-alpha.1.min.js"></script>
+<script src="js/jquery.mobile.tabs.js"></script>
+<!--<script type="text/javascript" src="js/jquery.cookies.js"></script>-->
+<script type="text/javascript">
+	var addToHomeConfig = {
+		autostart: false,
+		touchIcon: true,
+		startDelay: 0
+	};
+</script>
+
+<!--CSS-->
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0-alpha.1/jquery.mobile-1.2.0-alpha.1.min.css" />
+<!--<link rel="stylesheet" href="css/jquery.mobile.tabs.css" />
+<link rel="stylesheet" href="css/android-theme.css" />-->
+<link rel="stylesheet" href="css/android-tabs.min.css" />
+<link rel="stylesheet" href="css/custom.css" />
+
+<!--LESS
+<link rel="stylesheet/less" type="text/css" href="less/custom.less">
+<script src="http://cloud.github.com/downloads/cloudhead/less.js/less-1.3.1.min.js" type="text/javascript"></script>-->
+
+<!--Js Custom Lib-->
+<script src="js/js-calls-map.js" type="text/javascript"></script>
+
+<!--Royal Slider-->
+<link rel="stylesheet" href="royalslider/royalslider.css" />
+<link rel="stylesheet" href="royalslider/royalslider-skins/default/default.css" />
+<link rel="stylesheet" href="royalslider/royalslider-preview.css" />
+<script src="royalslider/jquery.easing.1.3.min.js"></script>
+<script src="royalslider/royal-slider-8.1.min.js"></script>
+<script src="js/slider-calls.js" type="text/javascript"></script>
+<!--<link rel="stylesheet" href="royalslider/royalslider.min.css" />-->
+
+<!--Date Box-->
+<script type="text/javascript" src="http://dev.jtsage.com/jquery.mousewheel.min.js"></script>
+<script type="text/javascript" src="http://dev.jtsage.com/cdn/datebox/latest/jquery.mobile.datebox.min.js"></script>
+<link type="text/css" href="datebox/jquery.mobile.datebox.css" rel="stylesheet" />
+
+<!--Gmap Scripts-->
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCvzv5wLrPHEdRMIfbQLc9pIX9zNaaii6Y&sensor=false"></script>
+<script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/src/infobox.js"></script><!--Custom Info Window-->
+<script src="js/geo.min.js" type="text/javascript" charset="utf-8"></script>
+
+<script src="js/pageshowmap.js"></script>
+
+<script type="text/javascript" src="js/ajaxfileupload.js"></script>
+<!--Add To Home-->
+<link rel="stylesheet" href="css/add2home.css">
+<script type="text/javascript" src="js/add2home.min.js" charset="utf-8"></script>
+
+<!--[if IE]>
+<style>
+
+.ui-mobile-viewport, .greenCall.ui-page, .ui-header, .ui-footer {
+    background-color: #084E06!important;
+}
+.support{text-align:center;color:#fff;}
+.IEhide{display:none;}
+
+</style>
+<![endif]-->
+</head>
+<body>
+
+<!-- div data-role="page" class="greenCall" id="home" -->
+
+<!--[if IE]>
+	<p class="para-line support">Internet Explorer does not support features of StreetPin please use another browser.<br/>Recommended browsers include Firefox or Chrome<p>
+<![endif]-->
+
+
+
+
+<div data-role="page" id="controls" class="greenCall">
+  <div data-role="header">
+    <div class="ui-grid-b greenohead">
+      <div class="ui-block-a"><a href="#menu" class="logo" title="Logo" data-transition="slide"><img src="images/streetpin-logo-glow.png" alt="logo" /></a></div>
+      <!--images/streetpin-logo-noglow.png-->
+      <div class="ui-block-b">
+        <div data-role="tabs" class="tabBtns">
+        	<a href="#tab-1" data-role="button" data-icon="map" data-iconpos="notext" data-inline="true" data-theme="b"></a>
+        	<a href="#tab-2" data-role="button" data-icon="list" data-iconpos="notext" data-inline="true" data-theme="b"></a> </div>
+      </div>
+      <div class="ui-block-c">
+        <div class="locBtns"> <a id="myLoc" data-role="button" data-theme="b" data-inline="true" data-icon="dicon" data-iconpos="top" data-rel="popup" data-position-to="window" data-transition="pop"></a>
+          <!--<a data-role="button" data-theme="b" data-inline="true" data-icon="pluss" data-iconpos="top" href="#popupLogin" data-rel="popup" data-position-to="window" data-transition="pop"></a>-->
+        </div>
+      </div>
+    </div>
+    <!-- /grid-a -->
+    <div class="searchArea">
+      <div class="ui-grid-a">
+          <div class="ui-block-a" id="divsearch">
+		  	<input type="search" placeholder="Find a board" id="txtsearch" />
+			<div data-role="popup" id="searchPopup" data-theme="a" data-tolerance="5,90" class="ui-corner-all">
+				<ul id="searchpoplist" data-role="listview" data-inset="true" style="max-width:310px;" data-theme="a" class="loc-list" ></ul>
+			</div>
+		  </div>
+          <div class="ui-block-b">
+            <div class="greenOnBtn"> <input type="button" id="boardsearch" name="boardsearch" value="Search" data-mini="true" data-theme="c" /> </div>
+          </div>
+        </div>
+    </div>
+<!--    <fieldset class="grey-btns" data-role="controlgroup" data-type="horizontal" >
+      <input type="radio" data-theme="a"  name="radio-choice" id="optboard" value="Board"  />
+      <label for="optboard">Board</label>
+      <input type="radio" data-theme="a" name="radio-choice" id="optuser" value="User"  />
+      <label for="optuser">User</label>
+      <input type="radio" data-theme="a" name="radio-choice" id="optbrand" value="Brand"  />
+      <label for="optbrand">Brand</label>
+      <input type="radio" data-theme="a" name="radio-choice" id="optloc" value="Location"  />
+      <label for="optloc">Location</label>
+      <input type="radio" data-theme="a" name="radio-choice" id="optall" value="All" checked="checked"  />
+      <label for="optall">All</label>
+    </fieldset>-->
+
+  </div>
+  <div data-role="content">
+    <div id="tab-1">
+      <div class="loading-on">
+        <h3><small>Acquiring location data</small> <span class="ui-icon-loading"></span></h3>
+      </div>
+      <div id="map_canvas" class="map_class"></div>
+	  <div class="infobox-wrapper">
+</div>
+      <div data-role="popup" id="popupLogin" data-theme="a" class="ui-corner-all">
+        <div class="popup-inner">
+          <h3>What's next?</h3>
+          <div class="greenOnBtn"> <a href="#" data-role="none" class="dashBtn" data-rel="back">Find a board</a></div><!-- onClick="closePopup();"-->
+          <div class="greenOnBtn"><a href="#landgrab" data-role="none" class="dashBtn" data-transition="slide">Create & claim your board</a></div>
+          <div class="greenOnBtn"><a href="#howto" data-role="none" class="dashBtn" data-transition="slide">How to...</a></div>
+          <div class="greenOnBtn"><a href="#" data-role="none" class="redBtn" data-rel="back">Close menu</a></div><!-- onClick="closePopup();"-->
+          <p>
+            <input type="checkbox" name="popupshow" id="popupshow" data-role="none" onClick="setPopup();"/>
+            <label for="popupshow">Don’t show this box again?</label>
+          </p>
+        </div>
+      </div>
+
+      <div class="map-footer" data-position="fixed" data-role="footer" data-fullscreen="true" style="display:none">
+      	<a href="#" data-role="none" class="ui-btn-right" onClick="$('.map-footer').hide();">close</a>
+        <div class="map-infos"></div>
+      </div>
+    </div>
+    <div id="tab-2">
+      <ul data-role="listview" class="listView" id="listboard">
+
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+
+<div data-role="page" id="menu" class="greenCall">
+  <div data-role="header" data-position="fixed" class="greenohead">
+    <h1>Menu</h1>
+    <a href="#" data-rel="back" data-theme="a">back</a> </div>
+  <!-- /header -->
+
+  <div data-role="content">
+    <div class="ui-grid-b menu-grid">
+      <div class="ui-block-a"> <a href="#landgrab" data-role="none" data-transition="slide"> <img src="images/image-boards.png" alt="image1" /> <span class="right-text">create board</span> </a> </div>
+      <div class="ui-block-b"> <a href="#controls" data-role="none" data-transition="slide"> <img src="images/image-search-button.png" alt="image1" /> <span class="right-text">find a board</span> </a> </div>
+      <div class="ui-block-c"> <a href="#inbox" data-role="none" data-transition="slide"> <span class="promptNum" style="display:none"></span> <img src="images/image-mail.png" alt="image1" /> <span class="right-text">mail</span> </a> </div>
+      <div class="ui-block-a"> <a href="#favourites" data-role="none" data-transition="slide"> <img src="images/image-favourites.png" alt="image1" /> <span class="right-text">favourites</span> </a> </div>
+      <div class="ui-block-b"> <a href="#profiles" data-role="none" data-transition="slide"> <img src="images/image-profile.png" alt="image1" /> <span class="right-text">profile</span> </a> </div>
+      <div class="ui-block-c"> <a href="#howto" data-role="none" data-transition="slide"> <img src="images/image-howto.png" alt="image1" /> <span class="right-text">how to</span> </a> </div>
+      <div class="ui-block-a"> <a href="#trends" data-role="none" data-transition="slide"> <img src="images/image-trending.png" alt="image1" /> <span class="right-text">trending</span> </a> </div>
+      <div class="ui-block-b"> <a href="#settings" data-role="none" data-transition="slide"> <img src="images/image-settings.png" alt="image1" /> <span class="right-text">settings</span> </a> </div>
+      <div class="ui-block-c"> <a href="#terms" data-role="none" data-transition="slide"> <img src="images/image-terms.png" alt="image1" /> <span class="right-text">terms</span> </a> </div>
+    </div>
+    <!-- /grid-a -->
+  </div>
+</div>
+
+
+
+<div data-role="page" id="settings" class="greenCall">
+    <div data-role="header" data-position="fixed" class="greenohead">
+		<h1>Settings</h1>
+		<a href="#" data-rel="back" data-theme="a">back</a>
+	</div><!-- /header -->
+
+    <div data-role="content">
+<!--        <h3 class="para-line">Notification alerts</h3>
+<form action="#" method="post" data-ajax="false">
+    	<div class="loginStack">
+        	<div class="areaToggle">
+            	<div data-role="fieldcontain">
+                    <label for="setpost">Reply to my post</label>
+                    <select name="setpost" id="setpost" data-role="slider">
+                        <option value="off" selected="selected">OFF</option>
+                        <option value="on">ON</option>
+                    </select>
+                </div>
+            </div>
+            <div class="areaToggle">
+            	<div data-role="fieldcontain">
+                    <label for="reprep">Reply to my replies</label>
+                    <select name="reprep" id="reprep" data-role="slider">
+                        <option value="off" selected="selected">OFF</option>
+                        <option value="on">ON</option>
+                    </select>
+                </div>
+            </div>
+            <div class="areaToggle">
+            	<div data-role="fieldcontain">
+                    <label for="newpost">New post on my board</label>
+                    <select name="newpost" id="newpost" data-role="slider">
+                        <option value="off" selected="selected">OFF</option>
+                        <option value="on">ON</option>
+                    </select>
+                </div>
+            </div>
+			<div class="areaField"><input type="text" name="set-name" id="set-name" value="" placeholder="Name"  /></div>
+            <div class="areaField"><input type="text" name="uname" id="uname" value="" placeholder="Username"  /></div>
+            <div class="areaField"><input type="email" name="email" id="email" value="" placeholder="Email"  /></div>
+            <div class="areaField"><input type="password" name="set-password" id="set-password" value="" placeholder="Password"  /></div>
+        </div>
+
+        <div class="greenOnBtn"><input type="submit" name="save" id="save" value="Save Settings" /></div>-->
+        <h3 class="para-line"><center>Full Settings Coming Soon...</center></h3>
+        <div class="greenOnBtn"><button type="button" name="logout" id="logout" value="log-out" onClick="logOut();">Log Out</button></div>
+    </form>
+	</div>
+</div>
+
+
+<div data-role="page" id="infos" class="greenCall">
+  <div data-role="header">
+    <div class="ui-grid-b greenohead">
+      <div class="ui-block-a"><a href="#landgrab" data-rel="back" data-role="button" data-inline="true" data-transition="slide" data-direction="reverse">&nbsp;</a></div>
+      <!--images/streetpin-logo-noglow.png-->
+      <div class="ui-block-b">
+        <h3 class="head3">Info</h3>
+      </div>
+      <div class="ui-block-c">&nbsp;</div>
+    </div>
+    <!-- /grid-a -->
+    <div data-role="tabs" class="trendTabs">
+    <a href="#info-1" data-role="button" data-inline="true" data-theme="b">how to...</a>
+    <a href="#info-2" data-role="button" data-inline="true" data-theme="b">StreetPearl</a>
+    <a href="#info-3" data-role="button" data-inline="true" data-theme="b">T &amp; C's</a> </div>
+  </div>
+  <div data-role="content">
+
+    <div id="info-1">
+      <div class="paperInfo">
+        <div class="info-data">
+          <p><strong>StreetPin</strong> usage terms and conditions</p>
+          <p>Welcome to StreetPin. If you continue to browse and use this product, you are agreeing to comply with and be bound by the following terms and conditions of use, which together with our privacy policy govern Proximate's relationship with you in relation to this application and site. If you disagree with any part of these terms and conditions, please do not use our application and site.</p>
+          <p>The term 'StreetPin' or 'us' or 'we' refers to the owner of the application (Proximate Ltd) and site whose registered office is 19 Worlds End Lane, Orpington. Our company registration number is 7563163. The term 'you' refers to the user or viewer of our website and applications.</p>
+          <p>The use of this application and site is subject to the following terms of use:</p>
+
+          <p><strong>Copyright:</strong> Please only upload images for which you own the copyright. Proximate moderators cannot and will not tolerate abuse of images and copyright in any way. Any image that we believe you do not own the copyright for will be rejected. We reserve the right to ban individual users from the website for copyright infringement. All images on this website are the property and copyright of their respective owners. By submission of photos, the owner grants Proximate and StreetPin.com the right to process, store and display them on Proximate websites and Streetpin.com and in related products. Third parties have no right to redistribute, resell or in any other way transfer or display content delivered through this service to any other party. Doing so may lead to prosecution.</p>
+          <p>Proximate Ltd assumes no liability for data and images uploaded by its users.</p>
+          <p>Returns Policy. If you change your mind about your purchase, please contact us within 14 days, and we will offer you a credit voucher. This does not affect your legal rights. If you require a refund, please contact hello@streetpin.com for further details</p>
+        </div>
+      </div>
+    </div>
+
+
+    <div id="info-2">
+      <div class="paperInfo">
+        <div class="info-data">
+          <p><strong>StreetPin</strong> usage terms and conditions
+          <p>Welcome to StreetPin. If you continue to browse and use this product, you are agreeing to comply with and be bound by the following terms and conditions of use, which together with our privacy policy govern Proximate's relationship with you in relation to this application and site. If you disagree with any part of these terms and conditions, please do not use our application and site.</p>
+          <p>The term 'StreetPin' or 'us' or 'we' refers to the owner of the application (Proximate Ltd) and site whose registered office is 19 Worlds End Lane, Orpington, England. Our company registration number is 7563163. The term 'you' refers to the user or viewer of our website and applications.</p>
+          <p>The use of this application and site is subject to the following terms of use:</p>
+          <ul>
+            <li>The content of the pages of this application and site is for your general information and use only. It is subject to change without notice.</li>
+            <li>Neither we nor any third parties provide any warranty or guarantee as to the accuracy, timeliness, performance, completeness or suitability of the information and materials found or offered on this website for any particular purpose. You acknowledge that such information and materials may contain inaccuracies or errors and we expressly exclude liability for any such inaccuracies or errors to the fullest extent permitted by law.</li>
+            <li>Your use of any information or materials on this website is entirely at your own risk, for which we shall not be liable. It shall be your own responsibility to ensure that any products, services or information available through this website meet your specific requirements.</li>
+            <li>This application and site contains material which is owned by or licensed to us. This material includes, but is not limited to, the design, layout, look, appearance and graphics. Reproduction is prohibited other than in accordance with the copyright notice, which forms part of these terms and conditions.</li>
+            <li>All trademarks reproduced in this website, which are not the property of, or licensed to the operator, are acknowledged on the application and site.</li>
+            <li>Unauthorized use of this website may give rise to a claim for damages and/or be a criminal offence.</li>
+            <li>From time to time, this website may also include links to other websites. These links are provided for your convenience to provide further information. They do not signify that we endorse the website(s). We have no responsibility for the content of the linked website(s).</li>
+            <li>Proximate reserve the right to remove posts or adverts that are deemed in appropriate</li>
+            <li>Proximate reserve the right to remove boards if they are deemed inappropriate, remain unused, or in the event of the same user creating multiple boards within a location</li>
+            <li>Your use of this website and any dispute arising out of such use of the website is subject to the laws of USA</li>
+          </ul>
+          <p><strong>Copyright:</strong> Please only upload images for which you own the copyright. Proximate moderators cannot and will not tolerate abuse of images and copyright in any way. Any image that we believe you do not own the copyright for will be rejected. We reserve the right to ban individual users from the website for copyright infringement. All images on this website are the property and copyright of their respective owners. By submission of photos, the owner grants Proximate and StreetPin.com the right to process, store and display them on Proximate websites and Streetpin.com and in related products. Third parties have no right to redistribute, resell or in any other way transfer or display content delivered through this service to any other party. Doing so may lead to prosecution.</p>
+          <p>Proximate Ltd assumes no liability for data and images uploaded by its users.</p>
+        </div>
+      </div>
+    </div>
+    <div id="info-3">
+      <div class="paperInfo">
+        <div class="info-data">
+           <p><strong>Willkommen bei StreetPin</strong></p>
+            <p>Wenn du diese Anwendung verwendest, stimmst du den folgenden Nutzungsbedingungen zu, die zusammen mit den Datenschutzrichtlinien die Beziehung zwischen Proximate und dir in Zusammenhang mit der Anwendung und Website StreetPin regeln. Falls du mit irgendeinem Teil dieser Bedingungen und Richtlinien nicht einverstanden bist, verwende bitte diese Anwendung und Website nicht!</p>
+            <p>Der Begriff "StreetPin" oder "wir" oder "uns" meint den Inhaber dieser Anwendung und Website mit dem registrierten Firmensitz 19 Worlds End Lane, Orpington (UK) und der Handelsregisternummer 7563163.</p>
+            <p>Der Begriff "du" meint den Benutzer oder Betrachter der Anwendung oder Website.</p>
+            <p>Die Verwendung dieser Anwendung und Website unterliegt den folgenden Nutzungsbedingungen:</p>
+            <ul>
+              <li>Die Seiteninhalte dieser Anwendung und Website ist f&#252;r deine allgemeine Information und Unterhaltung gedacht und k&#246;nnen ohne weitere Ank&#252;ndigung ge&#228;ndert werden.</li>
+              <li>Die Inhalte dieser Anwendung und Website wurden mit gr&#246;sster Sorgfalt erstellt. F&#252;r die Richtigkeit, Vollst&#228;ndigkeit und Aktualit&#228;t der Inhalte k&#246;nnen wir jedoch keine Gew&#228;hr &#252;bernehmen. Du hast zur Kenntnis genommen, dass die Inhalte Ungenauigkeiten oder Fehler beinhalten k&#246;nnen und wir ausdr&#252;cklich jegliche Haftung f&#252;r solche Ungenauigkeiten oder Fehler ablehnen.</li>
+              <li>Jegliche Nutzung der Inhalte dieser Anwendung und Website erfolgt auf eigenes Risiko, f&#252;r das wir keine Verantwortung &#252;bernehmen. Es liegt in deiner eigenen Verantwortung, sicherzustellen, dass alle verf&#252;gbaren Produkte, Service-Leistungen oder Informationen deine individuellen Anforderungen erf&#252;llen.</li>
+              <li>Diese Anwendung und Website beinhaltet Material, das uns geh&#246;rt oder an uns lizensiert ist. Dieses Material beinhaltet das Design, Layout, Aussehen und Grafiken, ist aber nicht beschr&#228;nkt auf diese Punkte. Vervielf&#228;ltigung ist untersagt ausser in &#220;bereinstimmung mit dem Urheberrechtsvermerk, der ein Teil dieser Nutzungsbedingungen ist.</li>
+              <li>Diese Anwendung und Website kann Handelsmarken zum Inhalt haben oder erw&#228;hnen, die nicht dem Betreiber geh&#246;ren oder an ihn lizensiert sind.</li>
+              <li>Unbefugte Nutzung dieser Anwendung oder Website kann eine Straftat und somit Grund f&#252;r Schadensersatzanspr&#252;che sein.</li>
+              <li>Diese Anwendung und Website kann Links zu externen Websites Dritter beinhalten, auf deren Inhalte wir keinen Einfluss haben. Deshalb k&#246;nnen wir f&#252;r diese fremden Inhalte auch keine Gew&#228;hr &#252;bernehmen. F&#252;r die Inhalte der verlinkten Websites ist stets der jeweilige Anbieter oder Betreiber der Websites verantwortlich.</li>
+              <li>Proximate beh&#228;lt sich das Recht vor, Postings und Anzeigenwerbung zu entfernen, wenn es deren Inhalt als unangebracht ansieht.</li>
+              <li>Proximate beh&#228;lt sich das Recht vor, Nachrichten-Boards zu entfernen, wenn es deren Inhalt als unangebracht ansieht, die Nachricht &#252;ber l&#228;ngere Zeit keine Antwort erh&#228;lt oder wenn ein User mehrere Nachrichten-Boards innerhalb einer Location ver&#246;ffentlicht.</li>
+              <li>Die Nutzung dieser Website unterliegt dem Recht von England, Nordirland, Schottland und Wales.</li>
+            </ul>
+            <p><strong>Copyright:</strong> Bitte lade nur Bilder hoch, die du selbst gemacht hast, oder an denen du die Rechte besitzt. Die Proximate Moderatoren dulden keine Verst&#246;sse gegen das Urheberrecht und behalten sich das Recht vor, auff&#228;llige Bilder zu l&#246;schen und Benutzer gegebenenfalls wegen Urheberrechtsverletzung von der Nutzung der Anwendung auszuschliessen. Alle Bilder auf dieser Website sind Eigentum des jeweiligen Besitzers. Mit dem Hochladen der Bilder erkl&#228;rt sich der User damit einverstanden, dass Proximate und StreetPin diese Bilder verarbeiten, speichern und auf Proximate Websites und Streetpin.com und dazugeh&#246;rigen Produkten verwendet d&#252;rfen. Die unerlaubte Vervielf&#228;ltigung, Reproduktion oder Weitergabe der Bilder durch Dritte ist untersagt und wird sowohl straf - als auch zivilrechtlich verfolgt.</p>
+            <p>Proximate und Proximate Ltd &#252;bernehmen keine Verantwortung f&#252;r Daten oder Bilder, die von den Benutzern hochgeladen wurden.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <div data-role="footer" data-position="fixed">
+    <div data-role="navbar" class="advertF">
+      <ul>
+        <li><a href="#controls" id="board" data-icon="custom" data-transition="slide">Board</a></li>
+        <li><a href="#profiles" id="profile" data-icon="custom" data-transition="slide">Profile</a></li>
+        <li><a href="#favourites" id="fav" data-icon="custom" data-transition="slide">Favourites</a></li>
+        <li><a href="#infos" id="info" data-icon="custom" class="ui-btn-active">Info</a></li>
+      </ul>
+    </div>
+    <!-- /navbar -->
+  </div>
+  <!-- /footer -->
+
+</div>
+
+
+<div data-role="page" id="terms" class="greenCall">
+  <div data-role="header" data-position="fixed" class="greenohead">
+    <h1>Terms</h1>
+    <a href="#" data-rel="back" data-theme="a">back</a> </div>
+  <!-- /header -->
+
+  <div data-role="content">
+    <!--<ul data-role="listview" data-inset="true" class="termInset">
+                <li><a href="#" data-transition="slide"><span class="col1">Language</span><span class="col2">English</span></a></li>
+            </ul>-->
+    <ul data-role="listview" data-inset="true" class="termInset">
+      <li>
+        <div data-role="fieldcontain">
+          <label for="lsttermlang">Language</label>
+          <select name="lsttermlang" id="lsttermlang" onChange="termChange();">
+            <option value="0" selected="selected">UK-English</option>
+            <option value="1">US-English</option>
+            <option value="2">German</option>
+          </select>
+        </div>
+      </li>
+    </ul>
+    <div id="terms-slider" class="royalSlider default mywidth">
+      <ul class="royalSlidesContainer">
+                    <li class="royalSlide">
+                        <div class="centeredSlide">
+                            <div class="paperBlk"><div class="inner">
+                                <p><strong>StreetPin</strong> usage terms and conditions</p>
+                                <p>Welcome to StreetPin. If you continue to browse and use this product, you are agreeing to comply with and be bound by the following terms and conditions of use, which together with our privacy policy govern Proximate's relationship with you in relation to this application and site. If you disagree with any part of these terms and conditions, please do not use our application and site.</p>
+                                <p>The term 'StreetPin' or 'us' or 'we' refers to the owner of the application (Proximate Ltd) and site whose registered office is 19 Worlds End Lane, Orpington. Our company registration number is 7563163. The term 'you' refers to the user or viewer of our website and applications.</p>
+                                <p>The use of this application and site is subject to the following terms of use:</p>
+
+                                <p><strong>Copyright:</strong> Please only upload images for which you own the copyright. Proximate moderators cannot and will not tolerate abuse of images and copyright in any way. Any image that we believe you do not own the copyright for will be rejected. We reserve the right to ban individual users from the website for copyright infringement. All images on this website are the property and copyright of their respective owners. By submission of photos, the owner grants Proximate and StreetPin.com the right to process, store and display them on Proximate websites and Streetpin.com and in related products. Third parties have no right to redistribute, resell or in any other way transfer or display content delivered through this service to any other party. Doing so may lead to prosecution.</p>
+                                <p>Proximate Ltd assumes no liability for data and images uploaded by its users.</p>
+                                <p>Returns Policy. If you change your mind about your purchase, please contact us within 14 days, and we will offer you a credit voucher. This does not affect your legal rights. If you require a refund, please contact hello@streetpin.com for further details</p>
+                            </div></div>
+                        </div>
+                    </li>
+                    <li class="royalSlide">
+                        <div class="centeredSlide">
+                            <div class="paperBlk"><div class="inner">
+                              <p><strong>StreetPin</strong> usage terms and conditions
+                              <p>Welcome to StreetPin. If you continue to browse and use this product, you are agreeing to comply with and be bound by the following terms and conditions of use, which together with our privacy policy govern Proximate's relationship with you in relation to this application and site. If you disagree with any part of these terms and conditions, please do not use our application and site.</p>
+                              <p>The term 'StreetPin' or 'us' or 'we' refers to the owner of the application (Proximate Ltd) and site whose registered office is 19 Worlds End Lane, Orpington, England. Our company registration number is 7563163. The term 'you' refers to the user or viewer of our website and applications.</p>
+                              <p>The use of this application and site is subject to the following terms of use:</p>
+                              <ul>
+                                <li>The content of the pages of this application and site is for your general information and use only. It is subject to change without notice.</li>
+                                <li>Neither we nor any third parties provide any warranty or guarantee as to the accuracy, timeliness, performance, completeness or suitability of the information and materials found or offered on this website for any particular purpose. You acknowledge that such information and materials may contain inaccuracies or errors and we expressly exclude liability for any such inaccuracies or errors to the fullest extent permitted by law.</li>
+                                <li>Your use of any information or materials on this website is entirely at your own risk, for which we shall not be liable. It shall be your own responsibility to ensure that any products, services or information available through this website meet your specific requirements.</li>
+                                <li>This application and site contains material which is owned by or licensed to us. This material includes, but is not limited to, the design, layout, look, appearance and graphics. Reproduction is prohibited other than in accordance with the copyright notice, which forms part of these terms and conditions.</li>
+                                <li>All trademarks reproduced in this website, which are not the property of, or licensed to the operator, are acknowledged on the application and site.</li>
+                                <li>Unauthorized use of this website may give rise to a claim for damages and/or be a criminal offence.</li>
+                                <li>From time to time, this website may also include links to other websites. These links are provided for your convenience to provide further information. They do not signify that we endorse the website(s). We have no responsibility for the content of the linked website(s).</li>
+                                <li>Proximate reserve the right to remove posts or adverts that are deemed in appropriate</li>
+                                <li>Proximate reserve the right to remove boards if they are deemed inappropriate, remain unused, or in the event of the same user creating multiple boards within a location</li>
+                                <li>Your use of this website and any dispute arising out of such use of the website is subject to the laws of USA</li>
+                              </ul>
+                              <p><strong>Copyright:</strong> Please only upload images for which you own the copyright. Proximate moderators cannot and will not tolerate abuse of images and copyright in any way. Any image that we believe you do not own the copyright for will be rejected. We reserve the right to ban individual users from the website for copyright infringement. All images on this website are the property and copyright of their respective owners. By submission of photos, the owner grants Proximate and StreetPin.com the right to process, store and display them on Proximate websites and Streetpin.com and in related products. Third parties have no right to redistribute, resell or in any other way transfer or display content delivered through this service to any other party. Doing so may lead to prosecution.</p>
+                              <p>Proximate Ltd assumes no liability for data and images uploaded by its users.</p>
+                            </div></div>
+                        </div>
+                    </li>
+                    <li class="royalSlide">
+                        <div class="centeredSlide">
+                            <div class="paperBlk"><div class="inner">
+                <p><strong>Willkommen bei StreetPin</strong></p>
+                <p>Wenn du diese Anwendung verwendest, stimmst du den folgenden Nutzungsbedingungen zu, die zusammen mit den Datenschutzrichtlinien die Beziehung zwischen Proximate und dir in Zusammenhang mit der Anwendung und Website StreetPin regeln. Falls du mit irgendeinem Teil dieser Bedingungen und Richtlinien nicht einverstanden bist, verwende bitte diese Anwendung und Website nicht!</p>
+                <p>Der Begriff "StreetPin" oder "wir" oder "uns" meint den Inhaber dieser Anwendung und Website mit dem registrierten Firmensitz 19 Worlds End Lane, Orpington (UK) und der Handelsregisternummer 7563163.</p>
+                <p>Der Begriff "du" meint den Benutzer oder Betrachter der Anwendung oder Website.</p>
+                <p>Die Verwendung dieser Anwendung und Website unterliegt den folgenden Nutzungsbedingungen:</p>
+                <ul>
+                  <li>Die Seiteninhalte dieser Anwendung und Website ist f&#252;r deine allgemeine Information und Unterhaltung gedacht und k&#246;nnen ohne weitere Ank&#252;ndigung ge&#228;ndert werden.</li>
+                  <li>Die Inhalte dieser Anwendung und Website wurden mit gr&#246;sster Sorgfalt erstellt. F&#252;r die Richtigkeit, Vollst&#228;ndigkeit und Aktualit&#228;t der Inhalte k&#246;nnen wir jedoch keine Gew&#228;hr &#252;bernehmen. Du hast zur Kenntnis genommen, dass die Inhalte Ungenauigkeiten oder Fehler beinhalten k&#246;nnen und wir ausdr&#252;cklich jegliche Haftung f&#252;r solche Ungenauigkeiten oder Fehler ablehnen.</li>
+                  <li>Jegliche Nutzung der Inhalte dieser Anwendung und Website erfolgt auf eigenes Risiko, f&#252;r das wir keine Verantwortung &#252;bernehmen. Es liegt in deiner eigenen Verantwortung, sicherzustellen, dass alle verf&#252;gbaren Produkte, Service-Leistungen oder Informationen deine individuellen Anforderungen erf&#252;llen.</li>
+                  <li>Diese Anwendung und Website beinhaltet Material, das uns geh&#246;rt oder an uns lizensiert ist. Dieses Material beinhaltet das Design, Layout, Aussehen und Grafiken, ist aber nicht beschr&#228;nkt auf diese Punkte. Vervielf&#228;ltigung ist untersagt ausser in &#220;bereinstimmung mit dem Urheberrechtsvermerk, der ein Teil dieser Nutzungsbedingungen ist.</li>
+                  <li>Diese Anwendung und Website kann Handelsmarken zum Inhalt haben oder erw&#228;hnen, die nicht dem Betreiber geh&#246;ren oder an ihn lizensiert sind.</li>
+                  <li>Unbefugte Nutzung dieser Anwendung oder Website kann eine Straftat und somit Grund f&#252;r Schadensersatzanspr&#252;che sein.</li>
+                  <li>Diese Anwendung und Website kann Links zu externen Websites Dritter beinhalten, auf deren Inhalte wir keinen Einfluss haben. Deshalb k&#246;nnen wir f&#252;r diese fremden Inhalte auch keine Gew&#228;hr &#252;bernehmen. F&#252;r die Inhalte der verlinkten Websites ist stets der jeweilige Anbieter oder Betreiber der Websites verantwortlich.</li>
+                  <li>Proximate beh&#228;lt sich das Recht vor, Postings und Anzeigenwerbung zu entfernen, wenn es deren Inhalt als unangebracht ansieht.</li>
+                  <li>Proximate beh&#228;lt sich das Recht vor, Nachrichten-Boards zu entfernen, wenn es deren Inhalt als unangebracht ansieht, die Nachricht &#252;ber l&#228;ngere Zeit keine Antwort erh&#228;lt oder wenn ein User mehrere Nachrichten-Boards innerhalb einer Location ver&#246;ffentlicht.</li>
+                  <li>Die Nutzung dieser Website unterliegt dem Recht von England, Nordirland, Schottland und Wales.</li>
+                </ul>
+                <p><strong>Copyright:</strong> Bitte lade nur Bilder hoch, die du selbst gemacht hast, oder an denen du die Rechte besitzt. Die Proximate Moderatoren dulden keine Verst&#246;sse gegen das Urheberrecht und behalten sich das Recht vor, auff&#228;llige Bilder zu l&#246;schen und Benutzer gegebenenfalls wegen Urheberrechtsverletzung von der Nutzung der Anwendung auszuschliessen. Alle Bilder auf dieser Website sind Eigentum des jeweiligen Besitzers. Mit dem Hochladen der Bilder erkl&#228;rt sich der User damit einverstanden, dass Proximate und StreetPin diese Bilder verarbeiten, speichern und auf Proximate Websites und Streetpin.com und dazugeh&#246;rigen Produkten verwendet d&#252;rfen. Die unerlaubte Vervielf&#228;ltigung, Reproduktion oder Weitergabe der Bilder durch Dritte ist untersagt und wird sowohl straf - als auch zivilrechtlich verfolgt.</p>
+                <p>Proximate und Proximate Ltd &#252;bernehmen keine Verantwortung f&#252;r Daten oder Bilder, die von den Benutzern hochgeladen wurden.</p>
+              </div></div>
+                        </div>
+                    </li>
+
+                </ul>
+    </div>
+    <div class="greenOnBtn">
+      <input type="button" name="accept" id="accept" value="Accept Terms" />
+    </div>
+  </div>
+</div>
+
+
+
+<div data-role="page" id="landgrab" class="greenCall">
+    <div data-role="header" data-position="fixed" class="greenohead">
+		<a href="#menu" data-theme="b" data-transition="slide" data-direction="reverse">Cancel</a>
+        <h1>Land Grab</h1>
+		<a href="#createboard" data-theme="b" data-transition="slide" data-ajax="false">Claim</a>
+	</div><!-- /header -->
+
+    <div data-role="content">
+    	<div id="map_canvas_land" style="height:500px;">
+
+		</div>
+    </div>
+</div>
+
+
+
+<div data-role="page" id="createboard" class="greenCall">
+    <div data-role="header" data-position="fixed" class="greenohead">
+		<a href="#landgrab"  class="takeback" data-theme="a">Back</a>
+        <h1>Create Board</h1>
+		<a href="#menu" data-theme="b" data-transition="slide">Cancel</a>
+	</div><!-- /header -->
+
+    <div data-role="content">
+	<span id="createboarderr"></span>
+        <form action="" method="post" data-ajax="false" id="frmcreateboard">
+				<input id="boardlat" name="boardlat" value="" type="hidden" />
+				<input id="boardlng" name="boardlng" value="" type="hidden" />
+            <div class="loginStack">
+            	<div class="areaField"><input type="text" name="create-name" id="create-name" value="" placeholder="Name"  /></div>
+                <div class="areaField"><textarea id="landadrs"></textarea></div>
+                <!--<ul data-role="listview" data-inset="true" class="termInset">
+                    <li><a href="#previews"><span class="col1">Category</span><span class="col2">Category</span></a></li>
+                </ul>
+                <ul data-role="listview" data-inset="true" class="termInset">
+                    <li><a href="#"><span class="col1">Text</span><span class="col2">Text</span></a></li>
+                </ul>-->
+            </div>
+                <ul data-role="listview" data-inset="true" class="termInset">
+                	<li><div data-role="fieldcontain">
+                       <label for="category1">Category</label>
+                       <select name="category1" id="category1">
+                          <option value="ENT" selected="selected">Entertainment</option>
+                          <option value="SPORT">Sport</option>
+                          <option value="FOOD_DRK">Food & Drink</option>
+                          <option value="BARCLUB">Bar, club</option>
+						  <option value="TRANS">Station, stop</option>
+                          <option value="EDU">Education</option>
+                          <option value="EVENT">Event</option>
+						  <option value="POI">Place of Interest</option>
+                          <option value="RETAIL">Retail</option>
+                          <option value="SOCIAL">Social</option>
+                       </select>
+                    </div></li>
+                </ul>
+                <!--<ul data-role="listview" data-inset="true" class="termInset">
+                	<li><div data-role="fieldcontain">
+                       <label for="boardcolor">Text</label>
+                       <select name="boardcolor" id="boardcolor">
+                          <option value="Black" selected="selected">Black</option>
+                          <option value="White">White</option>
+                          <option value="Red">Red</option>
+                          <option value="Blue">Blue</option>
+						  <option value="Yellow">Yellow</option>
+                       </select>
+                    </div></li>
+                </ul>-->
+            <div class="loginStack">
+                <div class="areaToggle">
+                    <div data-role="fieldcontain">
+                        <label for="board-add-fb">Add to Facebook</label>
+                        <select name="board-add-fb" id="board-add-fb" data-role="slider">
+                            <option value="off" selected="selected">OFF</option>
+                            <option value="on">ON</option>
+                        </select>
+                    </div>
+                </div>
+                <!--<div class="areaToggle">
+                    <div data-role="fieldcontain">
+                        <label for="board-add-twt">Add to Twitter</label>
+                        <select name="board-add-twt" id="board-add-twt" data-role="slider">
+                            <option value="off" selected="selected">OFF</option>
+                            <option value="on">ON</option>
+                        </select>
+                    </div>
+                </div>-->
+
+            </div>
+
+            <div class="greenOnBtn"><input type="button" name="preview" id="preview" value="Preview Board" onClick="getPreview();"/></div>
+            <p class="note1">Please note that your board will be up for grabs if you don’t post on it for 3 months.</p>
+        </form>
+	</div>
+</div>
+
+
+
+<div data-role="page" id="previews" class="greenCall">
+    <div data-role="header" data-position="fixed" class="greenohead">
+		<h1>Preview</h1>
+		<a href="#createboard"  class="takeback" data-theme="a" data-transition="slide">back</a>
+	</div>
+
+    <div data-role="content">
+       <iframe class="iframe-web" id="viewUrl" src="about:blank"></iframe>
+    	<div class="greenOnBtn"><a href="#" data-role="none" class="dashBtn" data-transition="slide" onClick="createBoard();">Create Board</a></div>
+	</div>
+</div>
+
+
+<div data-role="page" id="boardscreen" class="mapicon">
+  <!--
+Change classname to change category image :-
+cat-barclub < cat-books < cat-default < cat-events < cat-outdoors < cat-poi < cat-restaurants < cat-retails < cat-social < cat-sports < cat-stations < cat-tickets
+-->
+  <div data-role="header" class="greenohead">
+    <div class="ui-grid-b">
+      <div class="ui-block-a"> <a href="#controls"  class="mapback takeback" data-role="button" data-inline="true" data-transition="slide" data-direction="reverse">&nbsp;</a> </div>
+      <div class="ui-block-b">
+        <h3 class="head3" id="boardhead">Board Screen</h3>
+      </div>
+      <div class="ui-block-c">
+        <div class="locBtns">
+        	<a data-role="button" data-theme="b" data-inline="true" data-transition="slide" href="#popupadd" data-rel="popup" data-position-to="origin" data-overlay-theme="a"><strong>+</strong></a> </div>
+      </div>
+    </div>
+    <!-- /grid-a -->
+  </div>
+  <div data-role="content">
+		<div data-role="popup" id="popupadd" data-theme="a" class="ui-corner-all" data-tolerance="5,50">
+                <ul data-role="listview" data-inset="true" data-theme="a" class="loc-list">
+                    <li><a href="#" id="createnewpost" data-transition="slide">Add Post</a></li>
+					<li><a href="#profiles" id="popupdetail" data-transition="slide">Update status</a></li>
+					<li><a id="showMyLoc" href="#" data-transition="slide">Show my location</a></li>
+					<li data-icon="delete"><a href="#" data-role="none" class="redBtn" data-rel="back" >Cancel</a></li>
+                </ul>
+            </div>
+    <div class="myboard">
+    	<h5 class="blkright" id="boardscraddr"></h5>
+		  <h3 class="blkright" id="boardscrcat"></h3>
+          <h5 class="blkright">creator:</h5>
+      <div class="ui-grid-a">
+        <div class="ui-block-a" style="width:55%;"> &nbsp;
+		  <div class="addthis_toolbox addthis_default_style" style="margin-top:-16px;">
+				<a class="addthis_button_preferred_2"><img src="images/facebook_32.png" alt="facebook" /></a>
+                <a class="addthis_button_preferred_1"><img src="images/twitter_32.png" alt="twitter" /></a>
+				<a class="addthis_button_preferred_3"><img src="images/email_32.png" alt="email" /></a>
+				<a class="addthis_button_compact"><img src="images/1354286846_addthis.png" alt="addthis" /></a>
+				<a class="addthis_counter addthis_bubble_style"></a>
+				</div>
+				<script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
+				<script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-50af72d56f668872"></script><!-- /grid-a -->
+        </div>
+        <div class="ui-block-b" style="width:45%;">
+          <div class="greenOnBtn right boardcreator"><a href="#" data-role="none" class="dashBtn" id="boardscrcreator" data-transition="slide"></a></div>
+        </div>
+      </div>
+      <!-- /grid-a -->
+
+      <div class="ui-grid-b postBoard" id="boardposts">
+        <div class="ui-block-a">
+          <div class="cutpaper-one">
+            <a class="posty-desc" id="bpost0" data-transition="slide"></a>
+			<span class="postnum" id="postrep1" style="display:none"></span>
+            <!--<p class="posty-name"></p>-->
+          </div>
+        </div>
+        <div class="ui-block-b">
+          <div class="cutpaper-one">
+            <a class="posty-desc" id="bpost1" data-transition="slide"></a>
+			<span class="postnum" id="postrep2" style="display:none"></span>
+            <!--<p class="posty-name"></p>-->
+          </div>
+        </div>
+        <div class="ui-block-c">
+          <div class="cutpaper-one">
+            <a class="posty-desc" id="bpost2" data-transition="slide"></a>
+			<span class="postnum" id="postrep3" style="display:none"></span>
+            <!--<p class="posty-name"></p>-->
+          </div>
+        </div>
+      </div>
+      <div class="ui-grid-b imageBoard">
+        <div class="ui-block-a">
+          <div class="cutpaper">
+            <div class="post-image"><img id="boardadimg0" src="" alt="image1" /></div>
+            <a class="posty-title" id="bad0" data-transition="slide"></a>
+          </div>
+        </div>
+        <div class="ui-block-b">
+          <div class="cutpaper">
+            <div class="post-image"><img id="boardadimg1" src="" alt="image2" /></div>
+            <a class="posty-title" id="bad1" data-transition="slide"></a>
+          </div>
+        </div>
+        <div class="ui-block-c">
+          <div class="cutpaper">
+            <div class="post-image"><img id="boardadimg2" src="" alt="image3" /></div>
+            <a class="posty-title" id="bad2" data-transition="slide"></a>
+          </div>
+        </div>
+      </div>
+      <div class="ui-grid-b postBtns">
+        <div class="ui-block-a">
+          <div class="greenOnBtn"><a href="#" data-role="none" class="dashBtn" style="width:auto;" id="postcount" data-transition="slide"></a></div>
+        </div>
+        <div class="ui-block-b">
+          <div class="greenOnBtn"><a href="#advert" data-role="none" class="dashBtn" style="width:auto;" id="advertcount" data-transition="slide"></a></div>
+        </div>
+        <div class="ui-block-c">
+          <div class="greenOnBtn"><a href="#" data-role="none" class="dashBtn" style="width:auto;" id="usercount" data-transition="slide"></a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div data-role="page" id="trends" class="greenCall">
+  <div data-role="header">
+    <div class="ui-grid-b greenohead">
+      <div class="ui-block-a"><a href="#menu" class="logo" title="Logo" data-transition="slide" data-direction="reverse"><img src="images/streetpin-logo-glow.png" alt="image1" /></a></div>
+      <!--images/streetpin-logo-noglow.png-->
+      <div class="ui-block-b">
+        <h3 class="head3">Latest Board Posts</h3>
+      </div>
+      <div class="ui-block-c">&nbsp;</div>
+    </div>
+    <!-- /grid-a -->
+    <div data-role="tabs" class="trendTabs">
+    	<a href="#trendnearby" data-role="button" data-inline="true" data-theme="b">boards nearby</a>
+        <a href="#trendmyboard" data-role="button" data-inline="true" data-theme="b">my board</a>
+        <a href="#trendall" data-role="button" data-inline="true" data-theme="b">all boards</a>
+    </div>
+  </div>
+  <div data-role="content">
+    <div id="trendnearby">
+      <ul data-role="listview" class="trendList" id="lsttrendnearby">
+
+      </ul>
+    </div>
+    <div id="trendmyboard">
+      <ul data-role="listview" class="trendList" id="lstmytrend">
+
+      </ul>
+    </div>
+    <div id="trendall">
+      <ul data-role="listview" class="trendList" id="lsttrendall">
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+
+<div data-role="page" id="users" class="greenCall">
+  <div data-role="header" data-position="fixed" class="greenohead">
+    <h1>Users</h1>
+    <a href="#boardscreen" data-rel="back" data-theme="a" data-transition="slide" data-direction="reverse">board</a> </div>
+  <!-- /header -->
+
+  <div data-role="content">
+    <ul data-role="listview" class="userLists" id="userslist">
+
+    </ul>
+  </div>
+</div>
+
+
+
+<div data-role="page" id="posts" class="greenCall">
+  <div data-role="header">
+    <div class="ui-grid-b greenohead">
+      <div class="ui-block-a"> <a id="postback" href="#boardscreen" data-role="button" data-inline="true" data-transition="slide" data-direction="reverse" class="takeback">board</a> </div>
+      <div class="ui-block-b">
+        <div data-role="tabs" class="tabBtns">
+        	<a id="lnkpost1" href="#posts-1" data-role="button" data-icon="hscroll" data-iconpos="notext" data-inline="true" data-theme="b"></a>
+            <a id="lnkpost2" href="#posts-2" data-role="button" data-icon="list" data-iconpos="notext" data-inline="true" data-theme="b"></a>
+        </div>
+      </div>
+      <div class="ui-block-c">
+        <div class="locBtns">
+        	<a data-role="button" data-theme="b" data-inline="true" data-transition="slide" href="#popupposts" data-rel="popup" data-position-to="origin" data-overlay-theme="a"><strong>+</strong></a>
+        </div>
+      </div>
+    </div>
+    <!-- /grid-a -->
+    <div class="posts-cat">
+      <div class="ui-grid-a">
+        <div class="ui-block-a left" id="postcathead"></div>
+        <div class="ui-block-b right" id="postindex"></div>
+      </div>
+      <!-- /grid-a -->
+    </div>
+  </div>
+  <div data-role="content">
+
+    <div id="posts-1">
+	 <div data-role="popup" id="popupposts" data-theme="a" class="ui-corner-all" data-tolerance="5,50">
+                <ul data-role="listview" data-inset="true" data-theme="a" class="loc-list">
+                    <li><a href="#" id="btncreatepost" data-transition="slide">New Post</a></li>
+					<li><a href="#profiles" id="btnupdatestatus" data-transition="slide">Update Status</a></li>
+                </ul>
+            </div>
+      <div id="posts-slider" class="royalSlider default">
+        <ul class="royalSlidesContainer" id="viewpostslider">
+
+        </ul>
+      </div>
+    </div>
+
+    <div id="posts-2">
+      <ul data-role="listview" class="advertList" id="postlistview">
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div data-role="page" id="reply" class="greenCall">
+  <div data-role="header" data-position="fixed" class="greenohead">
+    <h1>New Reply</h1>
+    <a href="#" data-rel="back" data-theme="a">Cancel</a> </div>
+  <div data-role="content">
+  <span id="postrepErr"></span>
+    <form action="" method="post" data-ajax="false">
+	<input type="hidden" id="postid" value="" />
+	<input type="hidden" id="boardid" value="" />
+      <p class="note1" id="postttl">Replying to "this pulls in the title of the post"</p>
+      <div class="loginStack">
+        <div class="areaField">
+          <textarea id="txtpostreply" placeholder="Your Reply..."></textarea>
+        </div>
+      </div>
+      <div class="greenOnBtn">
+        <input type="button"  name="btnpostreply" id="btnpostreply" value="Post"  onClick="send_postReply();"/>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div data-role="page" id="postreport" class="greenCall">
+  <div data-role="header" data-position="fixed" class="greenohead">
+    <h1>Report</h1>
+    <a href="#" data-rel="back" data-theme="a">Cancel</a> </div>
+  <div data-role="content">
+  <span id="postreportErr"></span>
+    <form action="" method="post" daFta-ajax="false">
+	<input type="hidden" id="noticeid" value="" />
+	<input type="hidden" id="repboardid" value="" />
+      <div class="loginStack">
+        <div class="areaField">
+          <textarea id="txtreason" placeholder="Your Reason..."></textarea>
+        </div>
+      </div>
+      <div class="greenOnBtn">
+        <input type="button"  name="btnpostreport" id="btnpostreport" value="Report"  onClick="send_postReport();"/>
+      </div>
+	  <div id="reportPopup" data-role="popup" data-overlay-theme="a" style="max-width:250px;" class="ui-corner-all greenCall greenbg">
+			<div data-role="header" class="ui-corner-top greenohead" style="padding:1px 0">
+				<h1>Reported</h1>
+			</div>
+			<div data-role="content" class="ui-corner-bottom">
+				<p><center>Thanks for reporting, we will investigate.</center></p>
+				<div class="greenOnBtn"><a data-role="none" class="dashBtn" id="btnreportok" >OK</a></div>
+
+			</div>
+		</div>
+    </form>
+  </div>
+</div>
+
+<div data-role="page" id="msgreply" class="greenCall">
+    <div data-role="header" data-position="fixed" class="greenohead">
+		<h1>Message Reply</h1>
+		<a href="#" data-rel="back" data-theme="a">Cancel</a>
+	</div>
+
+    <div data-role="content">
+    	<form action="" method="post" data-ajax="false">
+			<input type="hidden" id="msgid" value="" />
+			<input type="hidden" id="sender" value="" />
+			<input type="hidden" id="subject" value="" />
+        	<p class="note1" id="msgrepErr">Replying to "this pulls in the title of the message"</p>
+            <div class="loginStack">
+                <div class="areaField"><textarea id="txtmsgreply" placeholder="Your Reply..."></textarea></div>
+            </div>
+            <div class="greenOnBtn"><input type="button" name="btnmsgreply" id="btnmsgreply" value="Reply" onClick="send_msgReply();"/></div>
+
+        </form>
+	</div>
+</div>
+
+
+<div data-role="page" id="createpost" class="greenCall">
+  <div data-role="header" data-position="fixed" class="greenohead">
+    <h1>Create Post</h1>
+    <a href="#" data-rel="back" data-theme="a">Cancel</a> </div>
+  <!-- /header -->
+
+  <div data-role="content">
+  <span id="newposterr"></span>
+    <form id="frmcreatepost" action="" method="post" data-ajax="false" enctype="multipart/form-data">
+      <input type="hidden" id="bid" value="" />
+      <!--<ul data-role="listview" data-inset="true" class="termInset">
+                    <li><a href="#previews"><span class="col1">Category</span><span class="col2">Category</span></a></li>
+                </ul>-->
+      <ul data-role="listview" data-inset="true" class="termInset">
+        <li>
+          <div data-role="fieldcontain">
+            <label for="postcat">Category</label>
+            <select name="postcat" id="postcat">
+				<option value="1" selected="selected">Here & now</option>
+				<option value="2">Announcements</option>
+				<option value="3">Meeting up</option>
+				<option value="4">Interests</option>
+				<option value="5">Wants</option>
+				<option value="6">Rant</option>
+            </select>
+          </div>
+        </li>
+      </ul>
+      <div class="loginStack">
+        <div class="areaField">
+          <input type="text" name="txtposttitle" id="txtposttitle" value="" placeholder="Title"  />
+        </div>
+        <div class="areaField">
+          <textarea placeholder="Text" id="txtpostdesc"></textarea>
+        </div>
+        <div class="areaToggle">
+          <div data-role="fieldcontain">
+            <label for="post-add-fb">Add to Facebook</label>
+            <select name="post-add-fb" id="post-add-fb" data-role="slider">
+              <option value="off">OFF</option>
+              <option value="on" selected="selected">ON</option>
+            </select>
+          </div>
+        </div>
+        <!--<div class="areaToggle">
+          <div data-role="fieldcontain">
+            <label for="post-add-twt">Add to Twitter</label>
+            <select name="post-add-twt" id="post-add-twt" data-role="slider">
+              <option value="off" s>OFF</option>
+              <option value="on" selected="selected">ON</option>
+            </select>
+          </div>
+        </div>-->
+      </div>
+      <!--<ul data-role="listview" data-inset="true" class="takeImage">
+                    <li><a href="#">
+                    <span class="col1"></span>
+                    <span class="col2">Add Image</span></a></li>
+                </ul>-->
+
+      <!--<ul data-role="listview" data-inset="true" class="termInset">
+                    <li><a href="#"><span class="col1">Expires</span><span class="col2">One Month</span></a></li>
+                </ul>-->
+      <ul data-role="listview" data-inset="true" class="termInset">
+        <li>
+          <div data-role="fieldcontain">
+            <label for="expires">Expires</label>
+            <select name="expires" id="expires">
+              <option value="Tonight" selected="selected">Tonight</option>
+              <option value="24 hours">24 hours</option>
+              <option value="1 week">1 week</option>
+              <option value="1 month">1 month</option>
+			  <option value="3 months">3 months</option>
+            </select>
+          </div>
+        </li>
+      </ul>
+	  <ul data-role="listview" data-inset="true" class="inputFile">
+        <li>
+          <div data-role="fieldcontain">
+            <label for="file"><img id="pimg" src="images/streetpin-logo-notext100.png" alt="image1" height="76px" /></label>
+            <input type="file" id="postfile" name="postfile" value="" />
+            <a href="#" class="upload" title="Upload" data-transition="slide"><img src="images/chevron-categories.png" alt="image1" /></a> </div>
+        </li>
+      </ul>
+      <div class="greenOnBtn">
+        <input type="button" name="create-submit" id="create-submit" value="Create my Post" onClick="createPost();"/>
+      </div>
+   	   </form>
+
+  </div>
+</div>
+
+
+
+<div data-role="page" id="advert" class="greenCall">
+  <div data-role="header">
+    <div class="ui-grid-b greenohead">
+      <div class="ui-block-a"> <a href="#" data-rel="back" data-role="button" data-inline="true">board</a> </div>
+      <div class="ui-block-b">
+        <div data-role="tabs" class="tabBtns">
+        	<a id="lnkadvert1" href="#advert-1" data-role="button" data-icon="hscroll" data-iconpos="notext" data-inline="true" data-theme="b"></a>
+            <a id="lnkadvert2" href="#advert-2" data-role="button" data-icon="list" data-iconpos="notext" data-inline="true" data-theme="b"></a>
+        </div>
+      </div>
+      <div class="ui-block-c">
+        <div class="locBtns"><!-- <a data-role="button" data-theme="b" data-inline="true" data-transition="pop" href="#" data-rel="popup" data-position-to="window" data-overlay-theme="a"><strong>+</strong></a>--> </div>
+      </div>
+    </div>
+    <!-- /grid-a -->
+    <div class="posts-cat">
+      <div class="ui-grid-a">
+        <div class="ui-block-a left" id="advertcathead"></div>
+        <div class="ui-block-b right" id="advertindex"></div>
+      </div>
+      <!-- /grid-a -->
+    </div>
+  </div>
+  <div data-role="content">
+    <div id="advert-1">
+		<div data-role="popup" id="popupadverts" data-theme="a" class="ui-corner-all">
+			<ul data-role="listview" data-inset="true" data-theme="a" class="loc-list">
+				<li><a href="#" id="btnadtofav" data-transition="slide">Add to Favourites</a></li>
+			</ul>
+		</div>
+      <div id="advert-slider" class="royalSlider default">
+        <ul class="royalSlidesContainer" id="viewadvertslider">
+
+        </ul>
+      </div>
+    </div>
+    <div id="advert-2">
+      <ul data-role="listview" class="advertList" id="advertlist">
+
+      </ul>
+    </div>
+  </div>
+<!--  <div data-role="footer" data-position="fixed">
+    <div data-role="navbar" class="advertF">
+      <ul>
+        <li><a href="#controls" id="board" data-icon="custom" class="ui-btn-active">Board</a></li>
+        <li><a href="#profiles" id="profile" data-icon="custom">Profile</a></li>
+        <li><a href="#favourites" id="fav" data-icon="custom">Favourites</a></li>
+        <li><a href="#infos" id="info" data-icon="custom">Info</a></li>
+      </ul>
+    </div>
+    <!-- /navbar
+  </div>-->
+  <!-- /footer -->
+
+</div>
+
+
+
+<div data-role="page" id="favourites" class="greenCall">
+  <div data-role="header" data-position="fixed" class="greenohead">
+    <h1>Favourites</h1>
+    <a href="#" data-rel="back" data-theme="a">back</a> </div>
+  <!-- /header -->
+
+  <div data-role="content">
+    <ul data-role="listview" class="advertList" id="favadslist">
+
+    </ul>
+  </div>
+</div>
+
+
+<div data-role="page" id="favDetails" class="greenCall">
+  <div data-role="header" data-position="fixed" class="greenohead">
+    <h1>Favourites</h1>
+    <a href="#" data-rel="back" data-theme="a">back</a>
+  </div>
+
+  <div data-role="content">
+      <div class="paperInfo">
+      	<div class="starimage"><a class="no-fav" href="#" id=""></a></div>
+        <div class="info-data">
+          <p><strong>StreetPin usage terms and conditions</strong></p>
+          <p>Welcome to StreetPin. If you continue to browse and use this product, you are agreeing to comply with and be bound by the following terms and conditions of use, which together with our privacy policy govern Proximate's relationship with you in relation to this application and site. If you disagree with any part of these terms and conditions, please do not use our application and site.</p>
+          <p>The term 'StreetPin' or 'us' or 'we' refers to the owner of the application (Proximate Ltd) and site whose registered office is 19 Worlds End Lane, Orpington. Our company registration number is 7563163. The term 'you' refers to the user or viewer of our website and applications.</p>
+          <p>The use of this application and site is subject to the following terms of use:</p>
+          <center><img height="200px" alt="image1" src="http://postacity.co.uk:8080/shine/images/ad/23-4e1ff6d57f29d7-51502582.jpg"></center>
+        </div>
+      </div>
+  </div>
+</div>
+
+
+<div data-role="page" id="inbox" class="greenCall">
+<div data-role="header">
+        <div class="ui-grid-b greenohead">
+            <div class="ui-block-a"><a href="#menu" class="logo" title="Logo" data-transition="slide" data-direction="reverse"><img id="inboximg" src="images/streetpin-logo-glow.png" alt="no image" /></a></div> <!--images/streetpin-logo-noglow.png-->
+            <div class="ui-block-b">
+            	<div data-role="tabs" class="tabBtns onlytxt">
+                    <a href="#inbox-1" data-role="button" data-inline="true" data-theme="b">Inbox</a>
+                    <a href="#send-1" data-role="button" data-inline="true" data-theme="b">Sent</a>
+                </div>
+            </div>
+        </div><!-- /grid-a -->
+    </div>
+
+    <div data-role="content">
+    	<div id="inbox-1">
+    	<ul data-role="listview" class="userLists" id="inboxlist">
+
+            </ul>
+         </div>
+         <div id="send-1">
+
+         <ul data-role="listview" class="userLists" id="outboxlist">
+
+            </ul>
+         </div>
+	</div>
+</div>
+
+
+<div data-role="page" id="msgview" class="greenCall">
+	<div data-role="header">
+    <div class="ui-grid-b greenohead">
+      <div class="ui-block-a"> <a href="#inbox" data-role="button" data-inline="true" data-transition="slide" data-direction="reverse" class="takeback">back</a> </div>
+      <div class="ui-block-b">
+        <h3 class="head3">Message View</h3>
+      </div>
+      <div class="ui-block-c">
+        &nbsp;
+      </div>
+    </div>
+    <!-- /grid-a -->
+    <div class="posts-cat">
+      <div class="ui-grid-a">
+        <div class="ui-block-a left">&nbsp;</div>
+        <div class="ui-block-b right" id="msgindex"></div>
+      </div>
+      <!-- /grid-a -->
+    </div>
+  </div>
+
+	<div data-role="content">
+		<input type="hidden" value="" name="cmsgid" id="cmsgid" />
+            <div id="msg-slider" class="royalSlider default">
+                <ul class="royalSlidesContainer" id="viewmailslider">
+
+                </ul>
+            </div>
+	</div>
+</div>
+
+
+
+<div data-role="page" id="profiles" class="greenCall">
+  <div data-role="header" data-position="fixed" class="greenohead">
+    <h1 id="uprofilename"></h1>
+    <a href="#" data-rel="back" data-theme="a">Back</a>
+	<div class="loading-on upload-on" id="loading" style="display:none">
+        <h3><small>Uploading Image</small> <span class="ui-icon-loading"></span></h3>
+      </div>
+	</div>
+
+  <!-- /header -->
+
+  <div data-role="content">
+
+  <form name="form" action="" enctype="multipart/form-data">
+	<input type="hidden" id="uemail" name="uemail" value="" />
+      <div class="loginStack">
+        <div class="ui-grid-a">
+<!--            <div class="ui-block-a" style="width:40%;"> <img src="" id="userimg" class="uimgprofile" alt="no image" />
+            <div class="greenOnBtn">
+              <input type="file" id="fileToUpload" name="fileToUpload" />
+            </div>
+
+          </div>-->
+
+          <div class="ui-block-b" style="width:60%;">
+            <div class="areaField">
+              <textarea placeholder="Update Status" id="txtuserstatus"></textarea>
+			  <span id="statuserr"></span>
+            </div>
+            <div class="greenOnBtn"><a id="btnstatusupdate" href="javascript:void(0);" data-role="none" class="dashBtn" data-transition="slide">Update Status</a></div>
+          </div>
+        </div>
+
+        <!-- /grid-a -->
+        <h3 class="para-line">Status Updates:</h3>
+
+        <!--div class="areaToggle">
+          <div data-role="fieldcontain">
+            <label for="profile-add-fb"><strong>Add to Facebook</strong></label>
+            <select name="profile-add-fb" id="profile-add-fb" data-role="slider">
+              <option value="off">OFF</option>
+              <option value="on" selected="selected">ON</option>
+            </select>
+          </div>
+        </div-->
+        <!--<div class="areaToggle">
+          <div data-role="fieldcontain">
+            <label for="profile-add-twt"><strong>Add to Twitter</strong></label>
+            <select name="profile-add-twt" id="profile-add-twt" data-role="slider">
+              <option value="off">OFF</option>
+              <option value="on" selected="selected">ON</option>
+            </select>
+          </div>
+        </div>-->
+        <!--div class="areaField">
+          <textarea placeholder="Tell us about you..." id="ubiog"></textarea>
+        </div-->
+      </div>
+      <!--ul data-role="listview" data-inset="true" class="termInset">
+        <li>
+          <div data-role="fieldcontain">
+            <label for="gender">Gender</label>
+            <select name="gender" id="gender">
+              <option selected="selected">Choose</option>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+            </select>
+          </div>
+        </li>
+      </ul-->
+      <!--ul data-role="listview" data-inset="true" class="termInset">
+        <li>
+          <div data-role="fieldcontain" class="datebox-inner">
+            <label for="defslide"><strong>Date of Birth</strong></label>
+            <input name="defslide" type="date" data-role="datebox" id="defslide" data-options='{"mode": "flipbox", "dateFormat": "dd/mm/YYYY", "useClearButton": true, "collapseButtons": true, "focusMode": true, "beforeToday":true, "centerWindow":true, "disableManualInput":true}' />
+          </div>
+        </li>
+      </ul-->
+      <!--h3 class="para-line">I'm interested in seeing offers for:</h3-->
+      <!--div class="loginStack">
+        <div class="areaToggle">
+          <div data-role="fieldcontain">
+            <label for="foodrink"><strong>Food & drink</strong></label>
+            <select name="foodrink" id="foodrink" data-role="slider">
+              <option value="off">OFF</option>
+              <option value="on" selected="selected">ON</option>
+            </select>
+          </div>
+        </div>
+        <div class="areaToggle">
+          <div data-role="fieldcontain">
+            <label for="events"><strong>Events</strong></label>
+            <select name="events" id="events" data-role="slider">
+              <option value="off">OFF</option>
+              <option value="on" selected="selected">ON</option>
+            </select>
+          </div>
+        </div>
+        <div class="areaToggle">
+          <div data-role="fieldcontain">
+            <label for="shopping"><strong>Shopping</strong></label>
+            <select name="shopping" id="shopping" data-role="slider">
+              <option value="off">OFF</option>
+              <option value="on" selected="selected">ON</option>
+            </select>
+          </div>
+        </div>
+        <div class="areaToggle">
+          <div data-role="fieldcontain">
+            <label for="hgarden"><strong>Home & garden</strong></label>
+            <select name="hgarden" id="hgarden" data-role="slider">
+              <option value="off">OFF</option>
+              <option value="on" selected="selected">ON</option>
+            </select>
+          </div>
+        </div>
+        <div class="areaToggle">
+          <div data-role="fieldcontain">
+            <label for="services"><strong>Services</strong></label>
+            <select name="services" id="services" data-role="slider">
+              <option value="off">OFF</option>
+              <option value="on" selected="selected">ON</option>
+            </select>
+          </div>
+        </div>
+        <div class="areaToggle">
+          <div data-role="fieldcontain">
+            <label for="leisure"><strong>Leisure</strong></label>
+            <select name="leisure" id="leisure" data-role="slider">
+              <option value="off">OFF</option>
+              <option value="on" selected="selected">ON</option>
+            </select>
+          </div>
+        </div>
+        <div class="areaToggle">
+          <div data-role="fieldcontain">
+            <label for="jobs"><strong>Jobs</strong></label>
+            <select name="jobs" id="jobs" data-role="slider">
+              <option value="off">OFF</option>
+              <option value="on" selected="selected">ON</option>
+            </select>
+          </div>
+        </div>
+        <div class="areaToggle">
+          <div data-role="fieldcontain">
+            <label for="travel"><strong>Travel</strong></label>
+            <select name="travel" id="travel" data-role="slider">
+              <option value="off">OFF</option>
+              <option value="on" selected="selected">ON</option>
+            </select>
+          </div>
+        </div>
+      </div-->
+	  <!--h3 class="para-line" id="profileerr"></h3>
+
+      <div class="greenOnBtn">
+        <input type="button" name="saveprofile" id="saveprofile" value="Save Settings" />
+      </div-->
+	  </form>
+  </div>
+</div>
+
+
+
+<div data-role="page" id="userprofile" class="greenCall">
+  <div data-role="header" data-position="fixed" class="greenohead">
+    <h1 id="userprofilename"></h1>
+    <a href="#" data-rel="back" data-theme="a">Back</a> </div>
+  <!-- /header -->
+
+  <div data-role="content">
+
+	<div data-role="fieldcontain">
+	<label for="userstatus"><img id="profileimage" src="" alt="No Image" />&nbsp;</label>
+		 <textarea readonly id="userstatus"></textarea>
+	</div>
+    <ul data-role="listview" data-inset="true" class="termInset">
+      <li>
+        <div data-role="fieldcontain" class="userActions">
+          <label>Interact</label>
+          <div class="ui-grid-a">
+            <div class="ui-block-a">&nbsp;<!--<a href="#composemail" data-role="none" class="mailtome" id="lnkusermail" data-transition="slide"></a>--></div>
+            <div class="ui-block-b"><!--<a href="#" data-role="none" class="blockme"></a>-->
+            	<a href="#composemail" data-role="none" class="mailtome" id="lnkusermail" data-transition="slide" style="float:right;"></a>
+              <!--<div class="blocks" >
+                <input type="checkbox" name="block-un" id="block-un" class="custom" />
+                <label for="block-un">block</label>
+              </div>-->
+            </div>
+          </div>
+          <!-- /grid-a -->
+        </div>
+      </li>
+    </ul>
+    <div class="loginStack">
+      <div class="areaField">
+        <textarea id="userbiog" readonly></textarea>
+      </div>
+    </div>
+    <h3 class="para-line">Recent Activity</h3>
+    <ul data-role="listview" id="useractivity" data-inset="true" class="usersView"><!-- List Of Uset's Recent Activity-->
+       </ul>
+  </div>
+</div>
+
+
+<div data-role="page" id="composemail" class="greenCall">
+  <div data-role="header" data-position="fixed" class="greenohead">
+    <h1>Compose Mail</h1>
+    <a href="#" data-rel="back" data-theme="a">Back</a> </div>
+  <!-- /header -->
+
+  <div data-role="content">
+  	<span id="composeerr" ></span>
+    <form action="" method="post" data-ajax="false">
+      <div class="loginStack">
+        <div class="areaField">
+         <input type="text" id="txtmailsubject" value="" placeholder="Enter Subject"  />
+        </div>
+        <div class="areaField">
+          <textarea placeholder="Enter Message" id="txtmail"></textarea>
+        </div>
+      </div>
+
+      <div class="greenOnBtn">
+        <input type="button" name="sendmail" id="sendmail" value="Send" onClick="sendMsg();" />
+      </div>
+    </form>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36581471-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+</body>
+</html>

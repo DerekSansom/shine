@@ -1,0 +1,45 @@
+package com.sp.entity.loc;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+@Entity
+@Table(name = "loc_area_3")
+public class Area3 extends Location {
+
+	@Transient
+	private Area2 area2;
+
+	@Column(name = "level_2_id")
+	private int area2Id;
+
+	public Area2 getArea2() {
+		return area2;
+	}
+
+	public void setArea2(Area2 area2) {
+		this.area2 = area2;
+	}
+
+	public int getArea2Id() {
+		return area2Id;
+	}
+
+	public void setArea2Id(int area2Id) {
+		this.area2Id = area2Id;
+	}
+
+	@Override
+	public String toString() {
+		if (getDescr() != null) {
+			return getDescr();
+		}
+		descr = new StringBuilder(name).append(", ").append(area2.toString()).append(", ")
+				.append(area2.getArea1().getCountry().toString())
+				.toString();
+		return descr;
+	}
+
+}

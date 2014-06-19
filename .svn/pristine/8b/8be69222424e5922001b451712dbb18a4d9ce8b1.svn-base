@@ -1,0 +1,78 @@
+package com.sp.portal;
+
+import java.security.Principal;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import shine.app.UserManager;
+import shine.dao.exception.ShineException;
+
+import com.shine.AvailableCredits;
+import com.sp.security.Role;
+import com.sp.security.StreetPinUserDetails;
+
+@Controller
+@RequestMapping(value = "/portal")
+public class PortalController {
+	
+	@Autowired
+	private UserManager userManager;
+
+	@RequestMapping(value = "")
+	@Secured({ Role.ADMIN, Role.USER })
+	public String home() throws ShineException {
+		return "portal/portalpublish";
+	}
+
+	@RequestMapping(value = "/unsecured")
+	public String unsecure() throws ShineException {
+		String string = "portal/splash";
+		return string;
+	}
+
+	@RequestMapping(value = "/publish")
+	@Secured({ Role.ADMIN, Role.USER })
+	public String publish(Model model, Principal principal) throws ShineException {
+		Logger logger = LoggerFactory.getLogger(PortalController.class);
+	    logger.info("PortalController - Publish");
+
+	    // TODO: how best to get this into each JSP so it can be accessed from leftsection?
+	    int userId = getUserId(principal);
+		AvailableCredits availableCredits = userManager.getAvailableCreditsForUserId(userId);
+		model.addAttribute("availableCredits",availableCredits);
+;	    return "portal/portalpublish";
+	}
+
+	@RequestMapping(value = "/profile")
+	@Secured({ Role.ADMIN, Role.USER })
+	public String profile() throws ShineException {
+		return "portal/portalprofile";
+	}
+
+	@RequestMapping(value = "/credits/add")
+	@Secured({ Role.ADMIN, Role.USER })
+	public String addCredits() throws ShineException {
+		return "portal/portalcreditsadd";
+	}
+
+	@RequestMapping(value = "/activity")
+	@Secured({ Role.ADMIN, Role.USER })
+	public String activity() throws ShineException {
+		return "portal/portalactivity";
+	}
+
+	private int getUserId(Principal principal) {
+		StreetPinUserDetails user = (StreetPinUserDetails) ((Authentication) principal).getPrincipal();
+		if (user == null) {
+			return 0;
+		}
+		return user.getId();
+	}
+}

@@ -1,0 +1,59 @@
+package sp.json.web;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+
+import shine.dao.exception.ShineException;
+
+import com.sp.auth.SpUnauthorisedException;
+
+public abstract class BasePhoneServlet extends BaseServlet {
+
+	protected Logger log = Logger.getLogger(BasePhoneServlet.class);
+	private static final String XML_UTF8_CONTENT_TYPE = "text/xml; charset=UTF-8";
+	protected static final String JSON_UTF8_CONTENT_TYPE = "application/json; charset=UTF-8";
+	protected static final String HTML_UTF8_CONTENT_TYPE = "text/html; charset=UTF-8";
+	static final String XML_DECL = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse res)
+			throws ServletException, IOException {
+		log.debug(this.getClass().getSimpleName() + " request received: " + req.getRequestURI() + "?"
+				+ req.getQueryString());
+		boolean test = getBoolean(req, "test");
+		String resp = null;
+		try {
+			resp = doResponse(req);
+			res.setContentType(getDefaultContentType());
+
+		} catch (ShineException e) {
+			log.error("doPost:shineException: " + e.getCode(), e);
+			resp = "" + e.getCode();
+			if (test) {
+				resp += ":" + e.getMessage();
+			}
+			res.setContentType(HTML_UTF8_CONTENT_TYPE);
+
+		} catch (SpUnauthorisedException e) {
+			log.debug("doPost:unauthorised");
+			res.setStatus(HttpURLConnection.HTTP_UNAUTHORIZED);
+			return;
+		}
+
+		log.debug(this.getClass().getSimpleName() + " sending response: " + resp);
+		res.getWriter().print(resp);
+		res.getWriter().close();
+
+	}
+
+	protected String getDefaultContentType() {
+		return XML_UTF8_CONTENT_TYPE;
+	}
+
+}

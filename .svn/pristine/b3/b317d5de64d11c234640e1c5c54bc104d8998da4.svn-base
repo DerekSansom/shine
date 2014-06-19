@@ -1,0 +1,113 @@
+package com.sp.portal;
+
+
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import shine.app.BoardManager;
+import shine.dao.exception.ShineException;
+
+import com.shine.boards.NoticeBoard;
+import com.sp.portal.boards.BoardResult;
+import com.sp.security.Role;
+import com.sp.security.StreetPinUserDetails;
+
+@Controller
+@RequestMapping(value = "/portal")
+public class PortalBoardController {
+	
+	@Autowired
+	private BoardManager boardManager;
+
+	@RequestMapping(value = "/boards")
+	@Secured({ Role.ADMIN, Role.USER })
+	public String boards(Model model, Principal principal, @RequestParam(required = false, value = "start") Integer start)
+			throws ShineException {
+
+		int count = 20;
+		start = calculateStart(start);
+		int totalBoards = 0;
+		List<NoticeBoard> usersBoards = null;
+		// for now only paginate for admin, users just get all their boards back
+		if (isAdmin(principal)) {
+			usersBoards = boardManager.getAllBoardsPaginated(start - 1, count);
+			totalBoards = boardManager.getAllBoardsCount();
+		} else {
+			int userId = getUserId(principal);
+			usersBoards = boardManager.getBoardsByCreatorId(userId);
+			totalBoards = usersBoards.size();
+			count = totalBoards;
+		}
+
+		BoardResult result = populateResult(usersBoards, start, count, totalBoards);
+		model.addAttribute("result", result);
+		return "portal/portalboards";
+	}
+
+	@RequestMapping(value = "/boards/new")
+	@Secured(Role.ADMIN)
+	public String addBoard() throws ShineException {
+		return "portal/portalboardsnew";
+	}
+
+
+	private int getUserId(Principal principal) {
+		StreetPinUserDetails user = (StreetPinUserDetails) ((Authentication) principal).getPrincipal();
+		if (user == null) {
+			return 0;
+		}
+		return user.getId();
+	}
+
+	private boolean isAdmin(Principal principal) {
+		StreetPinUserDetails user = (StreetPinUserDetails) ((Authentication) principal).getPrincipal();
+		return user.hasRole(Role.ADMIN);
+	}
+
+	private int calculateStart(Integer start) {
+		if (start == null || start.intValue() < 1) {
+			return 1;
+		}
+		return start;
+	}
+
+	private BoardResult populateResult(List<NoticeBoard> boards, Integer start, Integer count, Integer totalBoards) {
+
+		if (boards.isEmpty()) {
+			return new BoardResult(boards, boards, null, null, null);
+		}
+
+		Collections.sort(boards, new Comparator<NoticeBoard>() {
+				@Override
+				public int compare(NoticeBoard o1, NoticeBoard o2) {
+					return o1.getName().compareTo(o2.getName());
+				}
+			});
+
+		List<NoticeBoard> activeBoards = new ArrayList<>();
+		List<NoticeBoard> draftBoards = new ArrayList<>();
+
+		for (NoticeBoard noticeBoard : boards) {
+			if (Boolean.TRUE == noticeBoard.getActive()) {
+				activeBoards.add(noticeBoard);
+			} else {
+				draftBoards.add(noticeBoard);
+			}
+
+		}
+
+		return new BoardResult(activeBoards, draftBoards, start, count, totalBoards);
+	}
+
+}

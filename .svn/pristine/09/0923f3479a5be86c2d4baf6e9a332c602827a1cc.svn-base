@@ -1,0 +1,78 @@
+package com.sp.security;
+
+import java.util.Arrays;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
+
+import shine.app.PasswordManager;
+import shine.app.PlayerManager;
+import shine.dao.exception.ShineException;
+
+import com.shine.objects.Player;
+
+@Component
+public class LoginService implements UserDetailsService, AuthenticationManager {
+
+	@Autowired
+	private PlayerManager playerManager;
+
+	@Autowired
+	private PasswordManager passwordManager;
+
+	@Override
+	public Authentication authenticate(Authentication auth) throws AuthenticationException {
+
+		String name = auth.getName();
+		Object cred = auth.getCredentials();
+		String password = null;
+		if (cred != null) {
+			password = cred.toString();
+		}
+		try {
+			Player user = passwordManager.doLogin(name, password, "mw", null, null);
+			if (user == null) {
+				throw new BadCredentialsException("User does not exists!");
+			}
+			SpAuthority spauth = new SpAuthority();
+			if ("admin".equals(name)) {
+				spauth.setAuthority(Role.ADMIN);
+			} else {
+				spauth.setAuthority(Role.USER);
+			}
+			StreetPinUserDetails principal = new StreetPinUserDetails(user.getUsername(), Arrays.asList(spauth),
+					password, user.getId());
+			StreetPinAuth spauAuth = new StreetPinAuth(principal, Arrays.asList(spauth));
+			spauAuth.setAuthenticated(true);
+			return spauAuth;
+		} catch (ShineException e) {
+			throw new BadCredentialsException("User does not exists!");
+		}
+
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String arg0) throws UsernameNotFoundException {
+
+		Player p = playerManager.getUserByUsername(arg0);
+		SpAuthority auth = new SpAuthority();
+		String password = null;
+		if (p != null) {
+			auth.setAuthority("ROLE_USER");
+			password = p.getPassword();
+		} else {
+			auth.setAuthority("NONE");
+		}
+
+		StreetPinUserDetails details = new StreetPinUserDetails(arg0, Arrays.asList(auth), password, p.getId());
+
+		return details;
+	}
+}

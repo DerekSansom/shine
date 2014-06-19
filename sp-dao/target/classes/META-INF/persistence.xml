@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
+    <persistence-unit name="StreetPin">
+        <provider>org.hibernate.ejb.HibernatePersistence</provider>
+<!--         <jar-file>lib/sp-dao-0.0.1-SNAPSHOT.jar</jar-file> -->
+ 		<class>com.sp.entity.CorpBrandEntity</class>
+ 		<class>com.sp.entity.NoticeBoardEntity</class>
+ 		<class>com.sp.entity.NoticeEntity</class>
+ 		<class>com.sp.entity.PlayerEntity</class>
+ 		<class>com.sp.entity.ReplyEntity</class>
+ 		<class>com.sp.entity.ReportEntity</class>
+ 		<class>com.sp.entity.ad.AdDisplayParams</class>
+ 		<class>com.sp.entity.ad.AdvertEntity</class>
+ 		<class>com.sp.entity.ad.BoardDisplay</class>
+ 		<class>com.sp.entity.ad.DefaultAdParams</class>
+ 		<class>com.sp.entity.ad.ExcludedCategory</class>
+ 		<class>com.sp.entity.admin.CompanyEntity</class>
+ 		<class>com.sp.entity.auth.AuthToken</class>
+ 		<class>com.sp.entity.loc.Area1</class>
+ 		<class>com.sp.entity.loc.Area2</class>
+ 		<class>com.sp.entity.loc.Area3</class>
+ 		<class>com.sp.entity.loc.BoardLoc</class>
+ 		<class>com.sp.entity.loc.Country</class>
+ 		<class>com.sp.entity.msg.MailEntity</class>
+		<class>com.sp.entity.savedads.UserSavedAd</class>
+		<class>com.sp.entity.auth.PasswordResetToken</class>
+		<class>com.sp.entity.UserEntity</class>
+		<class>com.sp.entity.AvailableCreditsEntity</class>
+      </persistence-unit>
+</persistence>

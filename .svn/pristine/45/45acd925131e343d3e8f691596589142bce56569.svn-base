@@ -1,0 +1,32 @@
+package com.sp.entity.loc;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "loc_country")
+public class Country extends Location {
+
+	// @Column(name = "lat")
+	// private Double lat;
+	// @Column(name = "lng")
+	// private Double lng;
+
+	private String code;
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	@Override
+	public String toString() {
+		if (descr == null) {
+			return name;
+		}
+		return descr;
+	}
+}

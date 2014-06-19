@@ -1,0 +1,21 @@
+package com.sp.user;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.springframework.stereotype.Repository;
+
+import com.sp.entity.UserEntity;
+
+@Repository
+public class UserDaoImpl implements UserDao{
+	
+	@PersistenceContext
+	private EntityManager entityManager;
+
+	@Override
+	public UserEntity getUserById(int id) {
+		UserEntity p = entityManager.find(UserEntity.class, id);
+		return p;
+	}
+}

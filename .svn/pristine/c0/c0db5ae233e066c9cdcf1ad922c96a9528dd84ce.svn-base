@@ -1,0 +1,85 @@
+package com.shine.boards;
+
+import com.shine.objects.ShineObject;
+
+public class CorpBrand extends ShineObject{
+
+	private static final long serialVersionUID = 1L;
+	private int id, corporateId;
+	private String backgroundimg, url, name, linkColour, textColour, logo, bgColour;
+	
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getCorporateId() {
+		return corporateId;
+	}
+
+	public void setCorporateId(int corporateId) {
+		this.corporateId = corporateId;
+	}
+	public String getBackgroundimg() {
+		return backgroundimg;
+	}
+	public void setBackgroundimg(String backgroundimg) {
+		this.backgroundimg = backgroundimg;
+	}
+	public String getUrl() {
+		return url;
+	}
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getLinkColour() {
+		return linkColour;
+	}
+	public void setLinkColour(String linkColour) {
+		this.linkColour = linkColour;
+	}
+	public String getTextColour() {
+		return textColour;
+	}
+	public void setTextColour(String textColour) {
+		this.textColour = textColour;
+	}
+	@Override
+	public String toXml() {
+		StringBuilder xml = new StringBuilder("<brand");
+		xml.append(formatIntAttribute("id", id))
+				.append(formatIntAttribute("corpid", corporateId))
+			.append(formatAttribute("name", name))
+			.append(formatAttribute("backgroundimg", backgroundimg))
+			.append(formatAttribute("logo", logo))
+			.append(formatAttribute("linkColour", linkColour))
+			.append(formatAttribute("textColour", textColour))
+			.append(formatAttribute("bgColour", bgColour))
+			.append(formatAttribute("url", url))
+			.append("/>");
+		return xml.toString();
+	}
+	public String getBgColour() {
+		return bgColour;
+	}
+	public void setBgColour(String bgColour) {
+		this.bgColour = bgColour;
+	}
+	public String getLogo() {
+		return logo;
+	}
+	public void setLogo(String logo) {
+		this.logo = logo;
+	}
+	
+	
+}

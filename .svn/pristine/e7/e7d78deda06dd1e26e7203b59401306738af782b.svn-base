@@ -1,0 +1,18 @@
+package com.sp.security;
+
+import org.springframework.security.core.GrantedAuthority;
+
+public class SpAuthority implements GrantedAuthority {
+
+	private String authority;
+
+	@Override
+	public String getAuthority() {
+		return authority;
+	}
+
+	void setAuthority(String authority) {
+		this.authority = authority;
+	}
+
+}

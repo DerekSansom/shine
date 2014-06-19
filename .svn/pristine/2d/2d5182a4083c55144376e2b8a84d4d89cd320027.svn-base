@@ -1,0 +1,144 @@
+package shine.dao.jdbc;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+
+import com.shine.objects.Diamond;
+import com.shine.objects.Emerald;
+import com.shine.objects.ShineLocation;
+import com.shine.objects.Player;
+import com.sp.entity.game.PlayerDiamond;
+import com.sp.entity.game.PlayerEmerald;
+
+public class ObjectsDao extends ShineDao {
+
+//	public List<ShineObject> getDiamonds(ShineLocation loc) {
+//
+//		String sql = "select * from diamonds where ownerid is null and " +
+//				getLocSql(loc);
+//
+//		List<ShineObject> list = new ArrayList<ShineObject>();
+//		ResultSet rs = doQuery(sql);
+//
+//		while (nextResult(rs)) {
+//			list.add(popDiamond(rs));
+//		}
+//		close(rs);
+//		return list;
+//	}
+
+	public ObjectsDao(Session sess) {
+		super(sess);
+	}
+
+	public List<Emerald> getEmeralds(ShineLocation loc, Player player) {
+
+		String sql = "select emeralds.* from emeralds" +
+				" left join player_emeralds as pr1 on emeralds.id=pr1.emeraldid" +
+				" left join player_emeralds as pr2 on emeralds.parentid=pr2.emeraldid" +
+				" where " + getLocSql(loc) +
+				" and pr1.userid is null and (parentid is null or pr2.userid = " + player.getId() + ")";
+
+		List<Emerald> list = new ArrayList<Emerald>();
+		return doQuery(sql, Emerald.class);
+	}
+
+//	public synchronized boolean createDiamond(Diamond diamond, int usertrigger){
+//		
+//		String nextIdSql = "select max(id) as nextId from diamonds";
+//		
+//		ResultSet rs = doQuery(nextIdSql);
+//		int nextId = 0;
+//		if(nextResult(rs)){
+//			nextId = getInt(rs, "nextId");
+//		}
+//		close(rs);
+//		nextId++;
+//		
+//		String sql = "insert into diamonds (id,lat, lng, usertrigger, dateCreated) values("+nextId+","+
+//			diamond.getLocation().getLat()+","+diamond.getLocation().getLng()+","+usertrigger+", sysdate())";
+//
+//		int ret=doUpdate(sql);
+//		if(ret==0){
+//			log("Failed to insert diamond: "+sql);
+//			return false;
+//		}
+//		diamond.setId(nextId);
+//		return true;
+//	}
+
+	public int deleteDiamond(int id) {
+
+		PlayerDiamond pd = (PlayerDiamond) sess.load(PlayerDiamond.class, id);
+		if (pd != null) {
+			sess.delete(pd);
+		}
+		Diamond d = (Diamond) sess.load(Diamond.class, id);
+		if (d != null) {
+			sess.delete(d);
+		}
+		return 1;
+	}
+
+	public int deleteDiamond(ShineLocation loc) {
+
+		String sql = "select id from diamonds where lat=" + loc.getLat() + " and lng=" + loc.getLng();
+		List<Diamond> list = doQuery(sql, Diamond.class);
+		for (Diamond diamond : list) {
+			sess.delete(diamond);
+		}
+		return list.size();
+	}
+
+	public int pickupEmerald(int emeraldid, int userId) {
+		PlayerEmerald pe = new PlayerEmerald();
+		pe.setStoneId(emeraldid);
+		pe.setUserId(userId);
+		return 1;
+	}
+
+	public Emerald getEmerald(int id) {
+
+		return (Emerald) sess.load(Emerald.class, id);
+	}
+
+	public boolean playerHasEmerald(int playerid, int emeraldid) {
+
+		String sql = "from PlayerEmerald pe where pe.userId=" + playerid + " and pe.emeraldId=" + emeraldid;
+		Criteria q = sess.createCriteria(PlayerEmerald.class);
+
+		List list = q.list();
+
+		return !list.isEmpty();
+
+	}
+
+	public int dropEmeralds(Player player) {
+		String sql = "delete from player_emeralds where userid=" + player.getId();
+		SQLQuery q = sess.createSQLQuery(sql);
+		return q.executeUpdate();
+	}
+
+	public int dropSapphires(Player player) {
+		String sql = "delete from player_sapphires where userid=" + player.getId();
+		SQLQuery q = sess.createSQLQuery(sql);
+		int i = q.executeUpdate();
+		String sql2 = "update sapphires set ownerid=null where ownerid=" + player.getId();
+		q = sess.createSQLQuery(sql);
+		i += q.executeUpdate();
+		resetPlayerPoints(player);
+		return i;
+	}
+
+	private int resetPlayerPoints(Player player) {
+		String sql = "update player set score =0 where id=" + player.getId();
+		SQLQuery q = sess.createSQLQuery(sql);
+		int i = q.executeUpdate();
+		return i;
+	}
+
+}

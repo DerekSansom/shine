@@ -1,0 +1,76 @@
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+
+<div id="container-left">
+	<div id="user-summary">
+		<h1>
+			<a href="http://87.106.67.218">
+				<img src="${pageContext.request.contextPath}/img/streetpin-logo-glow.png" alt="Streetpin" width="205" height="145">
+			</a>
+		</h1>
+		<p>Logged in as <sec:authentication property="principal.username" /></p>
+		<p>XX Noticeboard credits</p>
+		<p>XX Advert credits</p>
+		<!--  REPLACE THIS TEST FROM INCLUDE ON BOARDS WITH CODE TO UPDATE CREDITS VALUES ETC -->
+		
+		<%-- <c:choose>
+				<c:when test="${empty result.activeBoards }">
+					No live boards.
+				</c:when>
+				<c:otherwise>
+					<table>
+						<tr>
+							<th>Board name</th>
+							<th></th>
+							<th>Actions</th>
+						</tr>
+					
+					
+						<c:forEach items="${result.activeBoards}" var="userBoard">
+							<tr>
+								<td>
+									<c:out value="${userBoard.name}"/>
+								</td>
+								<td>
+									<c:out value="${userBoard.created}"/>
+								</td>
+								<td>
+									<a href="/publish/boards/${userBoard.id}">Edit</a>
+									<a href="/publish/boards/${userBoard.id}/delete">Delete</a>
+								</td>
+							</tr>
+					</c:forEach>
+					</table>
+				</c:otherwise>
+			</c:choose>
+			--%>
+	</div>
+	<div id="navigation">
+		You
+		<ul>
+			<li><a href="${pageContext.request.contextPath}/mw/portal/profile">Profile</a></li>
+			<li><a href="${pageContext.request.contextPath}/mw/portal/auth/logout">Log out</a></li>
+		</ul>
+		Your brands
+		<ul>
+			<li><a href="${pageContext.request.contextPath}/mw/portal/brands">Existing Brands</a></li>
+			<li><a href="${pageContext.request.contextPath}/mw/portal/brands/new">Create new brand</a></li>
+		</ul>
+		Your boards
+		<ul>
+			<li><a href="${pageContext.request.contextPath}/mw/portal/boards">Existing boards</a></li>
+			<li><a href="${pageContext.request.contextPath}/mw/portal/boards/new">Create new board</a></li>
+		</ul>
+		Your adverts
+		<ul>
+			<li><a href="${pageContext.request.contextPath}/mw/portal/adverts">Existing adverts</a></li>
+			<li><a href="${pageContext.request.contextPath}/mw/portal/adverts/new">Create new advert</a></li>
+		</ul>
+		Credits
+		<ul>
+			<li><a href="${pageContext.request.contextPath}/mw/portal/credits/add">Add credits</a></li>
+			<li><a href="${pageContext.request.contextPath}/mw/portal/activity">Activity history</a></li>
+		</ul>
+	</div>
+</div> 

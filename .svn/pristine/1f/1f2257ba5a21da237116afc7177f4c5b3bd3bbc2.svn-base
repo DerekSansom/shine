@@ -1,0 +1,64 @@
+package com.sp.portal;
+
+
+import java.security.Principal;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import shine.app.BoardManager;
+import shine.dao.exception.ShineException;
+
+import com.shine.boards.NoticeBoard;
+import com.shine.objects.ShineObject;
+import com.sp.security.Role;
+import com.sp.security.StreetPinUserDetails;
+
+@Controller
+@RequestMapping(value = "/portal")
+public class PortalBoardController {
+	
+	@Autowired
+	private BoardManager boardManager;
+
+	@RequestMapping(value = "/boards")
+	@Secured(Role.ADMIN)
+	public String boards(Model model, Principal principal) throws ShineException {
+		int userId = getUserId(principal);
+		List<NoticeBoard> usersBoards = boardManager.getBoardsByCreatorId(userId);
+
+		Collections.sort(usersBoards, new Comparator<NoticeBoard>() {
+			@Override
+			public int compare(NoticeBoard o1, NoticeBoard o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+
+		model.addAttribute("usersBoards", usersBoards);
+		return "portal/portalboards";
+	}
+	
+
+	@RequestMapping(value = "/boards/new")
+	@Secured(Role.ADMIN)
+	public String addBoard() throws ShineException {
+		return "portal/portalboardsnew";
+	}
+
+
+	private int getUserId(Principal principal) {
+		StreetPinUserDetails user = (StreetPinUserDetails) ((Authentication) principal).getPrincipal();
+		if (user == null) {
+			return 0;
+		}
+		return user.getId();
+	}
+
+}

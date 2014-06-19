@@ -1,0 +1,58 @@
+package shine.xml;
+
+import java.util.List;
+
+import com.shine.boards.NoticeBoard;
+import com.shine.objects.Emerald;
+import com.shine.objects.ShineObject;
+import com.shine.xml.NoticeBoardXml;
+
+public class XmlUtil {
+
+	public static String createObjectListXml(List<ShineObject> objects) {
+		StringBuffer xml = new StringBuffer("<objects>");
+
+		for (ShineObject shineObject : objects) {
+			if (shineObject instanceof NoticeBoard) {
+				NoticeBoardXml nbx = new NoticeBoardXml((NoticeBoard) shineObject);
+
+				xml.append(nbx.toMapXml());
+			} else {
+				xml.append(shineObject.toXml());
+			}
+		}
+		xml.append("</objects>");
+
+		return xml.toString();
+	}
+
+	private static String stoneToXml(ShineObject so) {
+		/*
+		 * StringBuffer xml=new StringBuffer(); xml.append("<object lat=\"");
+		 * xml.append(so.getLat()); xml.append("\" lng=\"");
+		 * xml.append(so.getLng()); xml.append("\" type=\"");
+		 * xml.append(so.getClass().getSimpleName()); xml.append("\" id=\"");
+		 * xml.append(so.getId()); xml.append("\"/>");
+		 */
+		return so.toXml();
+	}
+
+	public static String createNextEmeraldXml(Emerald child) {
+
+		StringBuffer xml = new StringBuffer();
+		xml.append(createObjectXml(child));
+
+		return xml.toString();
+
+	}
+
+	public static String createObjectXml(ShineObject object) {
+		StringBuffer xml = new StringBuffer("<objects>");
+
+		xml.append(stoneToXml(object));
+		xml.append("</objects>");
+
+		return xml.toString();
+	}
+
+}

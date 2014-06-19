@@ -1,0 +1,83 @@
+package shine.dao.jdbc;
+
+import java.util.List;
+
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.shine.objects.ShineLocation;
+
+public abstract class ShineDao extends BaseDao {
+
+	private static double lngVariation = 0.5;
+	private static double latVariation = 0.5;
+
+	private static Logger log = LoggerFactory.getLogger(ShineDao.class);
+
+	public ShineDao(Session sess) {
+		super(sess);
+	}
+
+	<T> List doQuery(String queryStr, Class<T> clazz) {
+
+		SQLQuery q = sess.createSQLQuery(queryStr).addEntity(clazz);
+
+		return q.list();
+	}
+
+	<T> T doQueryForSingleResult(String queryStr, Class<T> clazz) {
+
+		SQLQuery q = sess.createSQLQuery(queryStr).addEntity(clazz);
+
+		return (T) q.uniqueResult();
+	}
+
+	protected String getLocSql(ShineLocation loc) {
+		StringBuffer buf = new StringBuffer("(lng >");
+		buf.append((loc.getLng() - lngVariation))
+				.append(" and lng <")
+				.append((loc.getLng() + lngVariation))
+				.append(" and lat >")
+				.append((loc.getLat() - latVariation))
+				.append(" and lat <")
+				.append((loc.getLat() + latVariation))
+				.append(")");
+		return buf.toString();
+	}
+
+	protected String updateLocSql(ShineLocation loc) {
+		String str = " set lat=" + loc.getLat() + ", lng=" + loc.getLng();
+		return str;
+	}
+
+	protected void log(String message) {
+		log.info(message);
+	}
+
+	protected void log(String message, Throwable t) {
+		log.error(message, t);
+	}
+
+	protected void debug(String message) {
+		log.debug(message);
+	}
+
+	protected void debug(String message, Throwable t) {
+		log.error(message, t);
+	}
+
+	protected void error(String message) {
+		log.error(message);
+	}
+
+	protected void error(String message, Throwable t) {
+		log.error(message, t);
+	}
+
+	// protected ShineLocation getLocation(ResultSet rs) {
+	// return new ShineLocation(getDouble(rs, "lat"), getDouble(rs, "lng"));
+	// }
+
+}

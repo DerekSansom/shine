@@ -1,0 +1,5 @@
+package com.sp.auth;
+
+public class SpUnauthorisedException extends RuntimeException {
+
+}

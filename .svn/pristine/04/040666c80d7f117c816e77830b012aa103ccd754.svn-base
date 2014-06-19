@@ -1,0 +1,10 @@
+package com.sp.credits;
+
+import com.sp.entity.AvailableCreditsEntity;
+
+
+public interface AvailableCreditsDao {
+
+	AvailableCreditsEntity getAvailableCreditsByUserId(int userId);
+
+}

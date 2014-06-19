@@ -1,0 +1,242 @@
+package shine.dao.jdbc;
+
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+import org.joda.time.DateTime;
+
+import com.shine.SharedConstants;
+import com.sp.entity.NoticeEntity;
+import com.sp.entity.ReplyEntity;
+
+public class NoticeDaoJdbc extends ShineDao {
+
+	public NoticeDaoJdbc(Session sess) {
+		super(sess);
+	}
+
+	private static final String getNoticesSql =
+			"select notices.*, player.username, count(replies.id) as repcnt from " +
+					" ((notices left join replies on replies.noticeid = notices.id)" +
+					//					" left join notice_categories on notices.categoryid = notice_categories.id)" +
+					" left join player on player.id = notices.creatorid)" +
+					" where ";
+
+	public List<NoticeEntity> getNotices(int boardid, int seconds_since) {
+
+		StringBuilder sb = new StringBuilder(getNoticesSql);
+		sb.append(" notices.boardid=").append(boardid)
+				.append(" and (notices.suspended is null or notices.suspended = 0) and (expires > NOW())")
+				.append(" and (TIMESTAMPDIFF(SECOND, notices.created ,NOW())< ")
+				.append(seconds_since)
+				.append(") group by notices.id order by created desc");
+
+		return doQuery(getNoticesSql, NoticeEntity.class);
+	}
+
+//	public List<Notice> getNoticesHib(int boardid, int from, int count, boolean inclSuspended) {
+//
+//		String sql = getNoticesSql + " notices.boardid=" + boardid;
+//		if (!inclSuspended) {
+//			sql += " and (notices.suspended is null or notices.suspended = 0)";
+//		}
+//
+//		sql += " group by notices.id order by created desc";
+//		sql += " LIMIT " + from + ", " + count;
+//
+//		List list = doQueryHib(sql);
+//		List<Notice> n = new ArrayList<Notice>();
+//		for (Object o : list) {
+//
+//			Object[] arr = (Object[]) o;
+//
+//			Notice nt = popNotice(arr);
+//			n.add(nt);
+//
+//		}
+//
+//		return n;
+//	}
+//
+//	private Notice popNotice(Object[] arr) {
+//		/*
+//		 * Notice notice = new Notice(getInt(rs, "id"), getInt(rs, "boardid"),
+//		 * getInt(rs, "creatorid"), getString(rs, "title"), getString(rs,
+//		 * "notice"), getInt(rs, "categoryid"), getDate(rs, "expires"));
+//		 * notice.setAuthor(getString(rs, "username"));
+//		 * notice.setCategory(getString(rs, "category"));
+//		 * notice.setCreated(getDate(rs, "created"));
+//		 * notice.setReported(getBoolean(rs, "reported"));
+//		 * notice.setSuspended(getBoolean(rs, "suspended"));
+//		 * notice.setRepliesCount(getInt(rs, "repcnt")); return notice;
+//		 */
+//		return null;
+//	}
+
+	// public int getNoticesCount(int boardid) {
+	//
+	// String sql = "select * from notices where expires >= NOW() and boardid="
+	// + boardid;
+	// return sess.createSQLQuery(sql).list().size();
+	//
+	// }
+
+	//
+	// public int getRepliesCount(int noticeid) {
+	//
+	// String sql = "select * from replies where noticeid=" + noticeid;
+	// return sess.createSQLQuery(sql).list().size();
+	//
+	// }
+
+	/*
+	 * private static String getSingleNoticeSql =
+	 * "select notices.*, player.username, notice_categories.category from player, "
+	 * +
+	 * " (notices left join notice_categories on notice_categories.id = notices.categoryid)"
+	 * + " where notices.creatorid = player.id"+ " and notices.id="; public
+	 * Notice getNotice(int noticeId) { String sql = getSingleNoticeSql+
+	 * noticeId; ResultSet rs=doQuery(sql); Notice n = null; if(nextResult(rs)){
+	 * n = popNotice(rs); List<Reply> replies = getReplies(n.getId(), false);
+	 * n.setReplies(replies); n.setRepliesCount(replies.size()); } return n; }
+	 */
+
+//	public List<ReplyEntity> getReplies(int noticeid, boolean inclSuspended) {
+//
+//		Criteria crit = sess.createCriteria(ReplyEntity.class);
+//		crit.add(Restrictions.eq("noticeId", noticeid));
+//
+//		if (!inclSuspended) {
+//			crit.add(Restrictions.eq("suspended", false));
+//		}
+//
+//		return crit.list();
+//	}
+
+
+//	private Reply popReply(ResultSet rs) {
+//		return popReply(rs, getInt(rs, "noticeid"));
+//	}
+
+	// private ReplyDto popReply(ResultSet rs, int noticeid) {
+	// ReplyDto r = new ReplyDto(
+	// getInt(rs, "id"),
+	// noticeid,
+	// getInt(rs, "creatorid"),
+	// getString(rs, "reply"));
+	// r.setAuthor(getString(rs, "username"));
+	// r.setCreated(getDate(rs, "created"));
+	// return r;
+	// }
+	//
+	/**
+	 * Creates and populates a Notice, but does not set reply count, nor replies
+	 * as replies is not always required and count can be derived from different
+	 * sources.
+	 * 
+	 * @param rs
+	 * @return
+	 */
+
+	// private NoticeDto popNotice(ResultSet rs) {
+	// NoticeDto notice = new NoticeDto(getInt(rs, "id"),
+	// getInt(rs, "boardid"),
+	// getInt(rs, "creatorid"),
+	// getString(rs, "title"),
+	// getString(rs, "notice"),
+	// getInt(rs, "categoryid"),
+	// getDate(rs, "expires"));
+	// notice.setAuthor(getString(rs, "username"));
+	// // notice.setCategory(getString(rs, "category"));
+	// notice.setCreated(getDate(rs, "created"));
+	// notice.setReported(getBoolean(rs, "reported"));
+	// notice.setSuspended(getBoolean(rs, "suspended"));
+	// notice.setRepliesCount(getInt(rs, "repcnt"));
+	// notice.setImageUrl(getString(rs, "image"));
+	// return notice;
+	// }
+
+	public ReplyEntity getReply(int replyid) {
+
+		return (ReplyEntity) sess.load(ReplyEntity.class, replyid);
+	}
+
+	public List<NoticeEntity> getNoticesByPlayer(int playerid, int start, int count, boolean inclSuspended,
+			int since_days) {
+
+		Criteria crit = sess.createCriteria(NoticeEntity.class);
+		crit.add(Restrictions.eq("creatorId", playerid));
+
+		if (!inclSuspended) {
+			crit.add(Restrictions.eq("suspended", false));
+		}
+		crit.add(Restrictions.gt("expires", DateTime.now().toDate()));
+		crit.addOrder(Order.desc("created"));
+		if (count > 0) {
+			crit.setFirstResult(start).setFetchSize(count);
+		}
+		if (since_days > 0) {
+			crit.add(Restrictions.gt("created", DateTime.now().minusDays(since_days).toDate()));
+		}
+
+		return crit.list();
+
+	}
+
+	public List<NoticeEntity> getNoticesSearch(int boardid, String str, int mode, int resultsRequired) {
+
+// String sql = getNoticesSql + " notices.boardid=" + boardid;
+// sql += " and (notices.suspended is null or notices.suspended = 0)";
+// sql += " and (expires > NOW())";
+// sql += " and (notices.title like ('%" + str + "%')";
+// sql += " or notices.notice like ('%" + str + "%')";
+// sql += " or player.username like ('%" + str + "%')";
+// sql += ")";
+//
+// sql += " group by notices.id order by created desc";
+
+		StringBuilder sb = new StringBuilder(getNoticesSql);
+		sb.append(" notices.boardid=").append(boardid)
+				.append(" and (notices.suspended is null or notices.suspended = 0) and (expires > NOW())");
+		switch (mode) {
+		case SharedConstants.NOTICE_ALL_FIELDS:
+		case SharedConstants.NOTICE_AND_CREATOR:
+			sb.append(" and (notices.title like ('%")
+					.append(str)
+					.append("%') or notices.notice like ('%")
+					.append(str)
+					.append("%') or player.username like ('%")
+					.append(str)
+					.append("%'))");
+
+			break;
+		case SharedConstants.NOTICE_FIELDS_ONLY:
+			sb.append(" and (notices.title like ('%")
+					.append(str)
+					.append("%') or notices.notice like ('%")
+					.append(str)
+					.append("%'))");
+
+			break;
+		case SharedConstants.NOTICE_CREATOR_ONLY:
+			sb.append(" and (player.username like ('%")
+					.append(str)
+					.append("%'))");
+			break;
+
+		default:
+			break;
+		}
+		sb.append(" group by notices.id order by created desc");
+		if (resultsRequired > 0) {
+			sb.append(" LIMIT 0, ")
+					.append(resultsRequired);
+
+		}
+
+		return doQuery(sb.toString(), NoticeEntity.class);
+	}
+}

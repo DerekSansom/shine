@@ -1,0 +1,113 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.shine.boards.Report"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/portal_style.css" />
+
+<title>StreetPin Portal</title>
+</head> 
+<body>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+	<jsp:include page="portalleftsection.jsp"></jsp:include>
+
+	<div id="container-right">
+
+		<div id="header">
+			<h1>Your boards</h1>
+		</div>
+
+		<div id="content">
+			<h3>Live noticeboards</h3>
+			
+			<c:choose>
+				<c:when test="${empty result.activeBoards }">
+					No live boards.
+				</c:when>
+				<c:otherwise>
+					<table>
+						<tr>
+							<th>Board name</th>
+							<th></th>
+							<th>Actions</th>
+						</tr>
+					
+					
+						<c:forEach items="${result.activeBoards}" var="userBoard">
+							<tr>
+								<td>
+									<c:out value="${userBoard.name}"/>
+								</td>
+								<td>
+									<c:out value="${userBoard.created}"/>
+								</td>
+								<td>
+									<a href="/publish/boards/${userBoard.id}">Edit</a>
+									<a href="/publish/boards/${userBoard.id}/delete">Delete</a>
+								</td>
+							</tr>
+					</c:forEach>
+					</table>
+				</c:otherwise>
+			</c:choose>
+			
+			<h3>Draft noticeboards</h3>
+
+			<c:choose>
+				<c:when test="${empty result.draftBoards }">
+					No draft boards.
+				</c:when>
+				<c:otherwise>
+					<table>
+						<tr>
+							<th>Board name</th>
+							<th></th>
+							<th>Actions</th>
+						</tr>
+						<c:forEach items="${result.draftBoards}" var="userBoard">
+							<tr>
+								<td>
+									<c:out value="${userBoard.name}"/>
+								</td>
+								<td>
+									<c:out value="${userBoard.created}"/>
+								</td>
+								<td>
+									<a href="/publish/boards/${userBoard.id}">Edit</a>
+									<a href="/publish/boards/${userBoard.id}/delete">Delete</a>
+								</td>
+							</tr>
+					</c:forEach>
+					</table>
+				</c:otherwise>
+			</c:choose>
+			
+			
+		</div>
+		<c:if test="${result.start != null}">
+			<div id="pagination">
+				<c:if test="${result.start > 1 }">
+					<a href="?start=${result.start - result.boardCount}">prev</a>
+				</c:if>
+				
+			showing ${result.start} to ${result.start + result.boardCount -1} of ${result.totalBoards} notice boards</div>
+				<c:if test="${result.start + result.boardCount - 1 < result.totalBoards }">
+					<a href="?start=${result.start + result.boardCount}">next</a>
+				</c:if>
+
+		</c:if>
+		
+		<div id="footer">
+			<div id="footer">&copy; Copyright 2014 streetpin</div>
+		</div>
+
+	</div>
+</body>
+
+</body>
+</html>

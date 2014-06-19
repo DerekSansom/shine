@@ -1,0 +1,40 @@
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<div id="container-left">
+	<div id="user-summary">
+		<h1>
+			<a href="http://87.106.67.218">
+				<img src="${pageContext.request.contextPath}/img/streetpin-logo-glow.png" alt="Streetpin" width="205" height="145">
+			</a>
+		</h1>
+		<p>Logged in as <sec:authentication property="principal.username" /></p>
+		<p>XX Noticeboard credits</p>
+		<p>XX Advert credits</p>
+	</div>
+	<div id="navigation">
+		You
+		<ul>
+			<li><a href="${pageContext.request.contextPath}/mw/portal/profile">Profile</a></li>
+			<li><a href="${pageContext.request.contextPath}/mw/auth/logout">Log out</a></li>
+		</ul>
+		Your brands
+		<ul>
+			<li><a href="${pageContext.request.contextPath}/mw/portal/brands">Existing Brands</a></li>
+			<li><a href="${pageContext.request.contextPath}/mw/portal/brands/new">Create new brand</a></li>
+		</ul>
+		Your boards
+		<ul>
+			<li><a href="${pageContext.request.contextPath}/mw/portal/boards">Existing boards</a></li>
+			<li><a href="${pageContext.request.contextPath}/mw/portal/boards/new">Create new board</a></li>
+		</ul>
+		Your adverts
+		<ul>
+			<li><a href="${pageContext.request.contextPath}/mw/portal/adverts">Existing adverts</a></li>
+			<li><a href="${pageContext.request.contextPath}/mw/portal/adverts/new">Create new advert</a></li>
+		</ul>
+		Credits
+		<ul>
+			<li><a href="${pageContext.request.contextPath}/mw/portal/credits/add">Add credits</a></li>
+			<li><a href="${pageContext.request.contextPath}/mw/portal/activity">Activity history</a></li>
+		</ul>
+	</div>
+</div> 

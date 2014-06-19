@@ -1,0 +1,36 @@
+package com.sp.portal.brands;
+
+import java.util.List;
+
+import com.shine.boards.CorpBrand;
+
+public class BrandResult {
+	private List<CorpBrand> brands;
+
+	private Integer start;
+	private Integer brandCount;
+	private Integer totalBrands;
+
+	public BrandResult(List<CorpBrand> brands,Integer start, Integer boardCount, Integer totalBrands) {
+		this.brands = brands;
+		this.start = start;
+		this.brandCount = boardCount;
+		this.totalBrands = totalBrands;
+	}
+
+	public List<CorpBrand> getBrands() {
+		return brands;
+	}
+
+	public Integer getStart() {
+		return start;
+	}
+
+	public Integer getBoardCount() {
+		return brandCount;
+	}
+
+	public Integer getTotalBoards() {
+		return totalBrands;
+	}
+}

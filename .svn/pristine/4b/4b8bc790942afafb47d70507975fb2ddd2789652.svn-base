@@ -1,0 +1,255 @@
+package shine.dao.jdbc;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
+
+import javax.persistence.criteria.CriteriaQuery;
+
+import org.hibernate.Query;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import shine.app.utils.ShineProperties;
+
+public abstract class BaseDao {
+	private static String strUser;
+	private static String strPassword;
+	private static Connection conn;
+	private static String strDatabase;
+	private static String strUrl;
+
+	static Logger log = LoggerFactory.getLogger(BaseDao.class);
+
+	static {
+
+		strUser = ShineProperties.getDbUser();
+		strPassword = ShineProperties.getDbPassword();
+		strDatabase = ShineProperties.getDbName();
+		strUrl = ShineProperties.getDbUrl();
+
+	}
+
+	protected Session sess;
+
+//	protected BaseDao() {
+//		sess = HibernateUtil.getSession();
+//	}
+
+	protected BaseDao(Session sess) {
+		this.sess = sess;
+	}
+
+	@SuppressWarnings("unchecked")
+	<T> List<T> castToList(Query query) {
+		return query.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	<T> List<T> castToList(CriteriaQuery<T> qdef) {
+		// TODO Auto-generated method stub
+		return (List<T>) qdef.getOrderList();
+	}
+
+	// protected Connection getConnection() throws SQLException {
+	//
+	// return sess.connection();
+	//
+	// /*
+	// * if(conn==null||conn.isClosed()){ String str =
+	// * "jdbc:mysql://"+strUrl+"/"
+	// * +strDatabase+"?user="+strUser+"&password="+strPassword; try {
+	// * Class.forName("com.mysql.jdbc.Driver").newInstance(); } catch
+	// * (InstantiationException e) { log.fatal("Failed to load connection",
+	// * e); } catch (IllegalAccessException e) {
+	// * log.fatal("Failed to load connection", e); } catch
+	// * (ClassNotFoundException e) { log.fatal("Failed to load connection",
+	// * e); } conn = DriverManager.getConnection(str);
+	// * }
+	// */
+	//
+	// // return conn;
+	//
+	// }
+
+	// ResultSet doQuery(String query) {
+	// Statement stmt = null;
+	// try {
+	// stmt = getConnection().createStatement();
+	// ResultSet rset = stmt.executeQuery(query);
+	// return rset;
+	// } catch (SQLException e) {
+	// throwRtSqlException(e, query);
+	// }
+	// return null;
+	// }
+
+	List doQueryHib(String query) {
+		SQLQuery q = sess.createSQLQuery(query);
+		return q.list();
+	}
+
+	// protected int getInt(ResultSet rset, String column) {
+	//
+	// try {
+	// return rset.getInt(column);
+	// } catch (SQLException e) {
+	// throwRtSqlException(e);
+	// }
+	// return 0;
+	// }
+
+	// protected double getDouble(ResultSet rset, String column) {
+	//
+	// try {
+	// return rset.getDouble(column);
+	// } catch (SQLException e) {
+	// throwRtSqlException(e);
+	// }
+	// return 0;
+	// }
+	//
+	// protected String getString(ResultSet rset, String column) {
+	//
+	// try {
+	// String str = rset.getString(column);
+	// return str;
+	// } catch (SQLException e) {
+	// throwRtSqlException(e);
+	// }
+	// return null;
+	// }
+	//
+	// protected boolean getBoolean(ResultSet rset, String column) {
+	//
+	// try {
+	// return rset.getBoolean(column);
+	// } catch (SQLException e) {
+	// throwRtSqlException(e);
+	// }
+	// return false;
+	// }
+	//
+	// protected Date getDate(ResultSet rset, String column) {
+	//
+	// try {
+	//
+	// java.sql.Timestamp sqlDate = rset.getTimestamp(column);
+	//
+	// return sqlDate;
+	// } catch (SQLException e) {
+	// throwRtSqlException(e);
+	// }
+	// return null;
+	// }
+	//
+	// protected boolean nextResult(ResultSet rset) {
+	// try {
+	// if (rset.next()) {
+	// return true;
+	// }
+	// } catch (SQLException e) {
+	// throwRtSqlException(e);
+	// }
+	//
+	// return false;
+	// }
+	//
+	// protected int doUpdate(String query) {
+	//
+	// int i = 0;
+	// Statement stmt = null;
+	// Transaction t = sess.beginTransaction();
+	// try {
+	// stmt = getConnection().createStatement();
+	// i = stmt.executeUpdate(query);
+	// t.commit();
+	// } catch (SQLException e) {
+	// t.rollback();
+	// throwRtSqlException(e, query);
+	// } finally {
+	// close(stmt);
+	// }
+	// return i;
+	// }
+
+	private static void throwRtSqlException(SQLException e) throws SqlRtException {
+		throw new SqlRtException(e);
+	}
+
+	private static void throwRtSqlException(SQLException e, String message) throws SqlRtException {
+		throw new SqlRtException(message, e);
+	}
+
+	String doNullString(String str) {
+
+		if (str == null) {
+			return null;
+		}
+
+		return "'" + escapeSqlString(str) + "'";
+	}
+
+	static void close(ResultSet rset) {
+		Statement stmt = null;
+		try {
+			stmt = rset.getStatement();
+			rset.close();
+
+		} catch (SQLException e) {
+			log.warn("Failed to close resultset: " + e.getMessage());
+		} finally {
+			if (stmt != null) {
+				close(stmt);
+			}
+		}
+
+	}
+
+	static void close(Statement stmt) {
+		Connection con = null;
+		try {
+			con = stmt.getConnection();
+			stmt.close();
+		} catch (SQLException e) {
+			log.warn("Failed to close statement: " + e.getMessage());
+		} finally {
+			if (con != null)
+				close(con);
+		}
+
+	}
+
+	static void close(Connection conn) {
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			log.warn("Failed to close connection: " + e.getMessage());
+		}
+
+	}
+
+	protected java.sql.Date toSqlDate(java.util.Date date) {
+		return new java.sql.Date(date.getTime());
+	}
+
+	protected String escapeSqlString(String string) {
+
+		return string.replaceAll("'", "''");
+	}
+
+	public void closeSession() {
+		if (sess != null && sess.isOpen()) {
+			try {
+				sess.close();
+			} catch (Throwable t) {
+				log.debug("BaseDao could not close session", t);
+			}
+		}
+	}
+
+}
