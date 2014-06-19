@@ -7,11 +7,44 @@
 <html>
 	<jsp:include page="../adminHead.jsp"></jsp:include>
 	<body>
-		<h1>Boards locations</h1>
+		<h1>Locations and default ads</h1>
 		<jsp:include page="../adminNav.jsp"></jsp:include>
 		<p>
 			<span id="err" style="color:red">${error}</span>
 		</p>
+		
+		
+		<h3>Global default ads:</h3>
+	<c:choose>
+		<c:when test="${empty global}">None</c:when>
+		<c:otherwise>
+		
+				<table class="sp-table-even-rows">
+						<tr>
+							<th/>
+							<th>Id</th>
+							<th>Code</th>
+							<th>Actions</th>
+						</tr>
+		
+				<c:forEach items="${global}" var="defaultAdParams">
+						<tr>
+				
+				
+					<td><c:out value="${defaultAdParams.advert.id}"/></td>
+					<td><c:out value="${defaultAdParams.advert.title}"/></td>
+					<td><a class="action_btn" href="${pageContext.request.contextPath}/mw/admin/adverts/${defaultAdParams.advert.id}/global/0/remove">
+						<img src="${pageContext.request.contextPath}/img/fugue/icons/cross.png" alt="AutoLocate">
+						Remove
+					</a></td>
+					
+				</c:forEach>
+			</table>
+		</c:otherwise>
+	</c:choose>
+		
+
+<h3>Default ads per country:</h3>
 
 		<table class="sp-table-even-rows">
 						<tr>

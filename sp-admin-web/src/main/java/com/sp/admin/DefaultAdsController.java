@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import shine.dao.exception.ShineException;
 
 import com.sp.advert.DefaultAdParamsDao;
+import com.sp.entity.ad.DefaultAdParams;
 import com.sp.entity.loc.Area1;
 import com.sp.entity.loc.Country;
 import com.sp.locations.BoardLocationsMapper;
@@ -32,6 +33,9 @@ public class DefaultAdsController {
 
 	@RequestMapping(value = "countries")
 	public String getLocations(Model model) throws ShineException {
+
+		List<DefaultAdParams> globalDefaults = defaultAdParamsDao.getNullLocationDefaultAdParams(0);
+		model.addAttribute("global", globalDefaults);
 
 		List<Country> countries = locationsDao.getLocations(Country.class);
 		model.addAttribute("countries", countries);

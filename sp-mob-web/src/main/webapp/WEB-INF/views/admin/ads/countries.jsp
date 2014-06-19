@@ -7,20 +7,44 @@
 <html>
 	<jsp:include page="../adminHead.jsp"></jsp:include>
 	<body>
-		<h1>Boards locations</h1>
 		<jsp:include page="../adminNav.jsp"></jsp:include>
 		<p>
 			<span id="err" style="color:red">${error}</span>
 		</p>
 
-		<h2>Advert options:</h2>
+
+<h2>Advert ${advert.displayname}</h2>
+
+
 
 <div id="ad">				
-		<h3><c:out value="${advert.displayname}"/></h3>
+		<p><strong>Details for ad ${advert.id}</strong></p>
+		<p>Name: <span><c:out value="${advert.displayname}"/></span></p>
 		<p>Title: <span><c:out value="${advert.title}"/></span></p>
+		<p>Text: <span><c:out value="${advert.text}"/></span></p>
+		<p>categoryId: <span><c:out value="${advert.categoryId}"/></span></p>
 		<p>Expires: <span><fmt:formatDate pattern="dd MMM yyyy k:mm" value="${advert.expires}"/></span></p>
-		
 </div>
+
+
+<h3>Global default ads:</h3>
+	<c:choose>
+		<c:when test="${empty global }">None</c:when>
+		<c:otherwise>
+			<ul>
+				<c:forEach items="${global}" var="defaultAdParams">
+					<li><c:out value="${defaultAdParams.advert.id}"/>:<c:out value="${defaultAdParams.advert.title}"/>
+					</li>
+				</c:forEach>
+			</ul>
+		</c:otherwise>
+	</c:choose>
+
+
+
+<a href="${pageContext.request.contextPath}/mw/admin/adverts/${advert.id}/global/0/set">Use as global default</a>
+
+
 <h4>Use this advert as default for:</h4>
 		<table class="sp-table-even-rows">
 						<tr>
@@ -29,32 +53,7 @@
 							<th>Current Default Ads</th>
 							<th/>
 						</tr>
-
-
-							<tr>
-								<td>
-									<a href="${pageContext.request.contextPath}/mw/admin/adverts/${advert.id}/globalDefault">Use as global default</a>
-								</td>
-								<td>
-									<c:out value="${country.code}"/>
-								</td>
-								<td>
-									<ul>
-										<c:when test="${empty result.adverts }">None</c:when>
-										<c:otherwise>
-											<c:forEach items="${country.defaultAdParams}" var="defaultAdParams">
-												<li><c:out value="${defaultAdParams.advert.id}"/>:<c:out value="${defaultAdParams.advert.title}"/>
-												</li>
-											</c:forEach>
-										</c:otherwise>
-									</ul>
-								</td>
-								<td>
-									<a href="${pageContext.request.contextPath}/mw/admin/adverts/${advert.id}/country/${country.id}/set">
-										<img src="${pageContext.request.contextPath}/img/fugue/icons/target.png" alt="Target">Set as default
-									</a>
-								</td>
-							</tr>					
+			
 					
 						<c:forEach items="${countries}" var="country">
 							<tr>
@@ -67,13 +66,15 @@
 								</td>
 								<td>
 									<ul>
-										<c:when test="${empty result.adverts }">None</c:when>
-										<c:otherwise>
-											<c:forEach items="${country.defaultAdParams}" var="defaultAdParams">
-												<li><c:out value="${defaultAdParams.advert.id}"/>:<c:out value="${defaultAdParams.advert.title}"/>
-												</li>
-											</c:forEach>
-										</c:otherwise>
+										<c:choose>
+											<c:when test="${empty country.defaultAdParams }">None</c:when>
+											<c:otherwise>
+												<c:forEach items="${country.defaultAdParams}" var="defaultAdParams">
+													<li><c:out value="${defaultAdParams.advert.id}"/>:<c:out value="${defaultAdParams.advert.title}"/>
+													</li>
+												</c:forEach>
+											</c:otherwise>
+										</c:choose>
 									</ul>
 								</td>
 								<td>

@@ -123,4 +123,14 @@ public class DefaultAdParamsDaoImpl implements DefaultAdParamsDao {
 		entityManager.remove(toDelete);
 		
 	}
+
+	@Override
+	public void save(DefaultAdParams newParams) {
+		entityManager.persist(newParams);
+	}
+
+	@Override
+	public void delete(DefaultAdParams toDelete) {
+		entityManager.remove(toDelete);
+	}
 }

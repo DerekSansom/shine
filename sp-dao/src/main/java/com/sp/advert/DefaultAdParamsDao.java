@@ -14,4 +14,8 @@ public interface DefaultAdParamsDao {
 
 	void removeCountryDefaultAds(int countryId, int adId);
 
+	void save(DefaultAdParams newParams);
+
+	void delete(DefaultAdParams toDelete);
+
 }

@@ -1,10 +1,14 @@
 package com.sp.entity.loc;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+
+import com.sp.entity.ad.DefaultAdParams;
 
 @MappedSuperclass
 public abstract class Location {
@@ -57,5 +61,7 @@ public abstract class Location {
 	public void setDescr(String descr) {
 		this.descr = descr;
 	}
+
+	public abstract List<DefaultAdParams> getDefaultAdParams();
 
 }

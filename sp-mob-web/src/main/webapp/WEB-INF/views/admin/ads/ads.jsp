@@ -36,7 +36,7 @@
 								<td>
 									<a class="action_btn" href="${pageContext.request.contextPath}/mw/admin/adverts/${advert.id}/default">
 										<img src="${pageContext.request.contextPath}/img/fugue/icons/target.png" alt="Set As Default">
-										Set As Default
+										Use As Default
 									</a>
 								</td>
 							</tr>
