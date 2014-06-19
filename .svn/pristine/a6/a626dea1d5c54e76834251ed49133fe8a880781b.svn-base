@@ -1,8 +1,0 @@
-dbuser=root
-dbpassword=password
-dbname=shine
-dburl=localhost
-image.folder.path=/home/derek/work/shine/webappimages/
-image.folder.user=user/
-
-#always leave a blank line for Java props
