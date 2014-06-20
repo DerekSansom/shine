@@ -13,8 +13,7 @@
 		</p>
 
 
-<h2>Advert ${advert.displayname}</h2>
-
+<h2>Advert "${advert.displayname}"</h2>
 
 
 <div id="ad">				
@@ -27,7 +26,9 @@
 </div>
 
 
+<div id="global">				
 <h3>Global default ads:</h3>
+	<a href="${pageContext.request.contextPath}/mw/admin/adverts/${advert.id}/global/0/set">Use this advert as a global default</a>
 	<c:choose>
 		<c:when test="${empty global }">None</c:when>
 		<c:otherwise>
@@ -40,11 +41,13 @@
 		</c:otherwise>
 	</c:choose>
 
+	<p>To edit global ads (i.e. remove any) go <a href="${pageContext.request.contextPath}/mw/admin/locations/countries">here</a></p>
+	
+</div>
 
 
-<a href="${pageContext.request.contextPath}/mw/admin/adverts/${advert.id}/global/0/set">Use as global default</a>
 
-
+<div id="countries">				
 <h4>Use this advert as default for:</h4>
 		<table class="sp-table-even-rows">
 						<tr>
@@ -85,6 +88,9 @@
 							</tr>
 					</c:forEach>
 		</table>
-
+		
+		<p>To edit country ads (i.e. remove any) go <a href="${pageContext.request.contextPath}/mw/admin/locations/countries">here</a></p>
+		
+</div>
 	</body>
 </html>

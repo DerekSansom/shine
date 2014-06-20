@@ -13,6 +13,7 @@ color:red;
 }
 
 </style>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/portal_style.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin.css" />
 
 </head>
