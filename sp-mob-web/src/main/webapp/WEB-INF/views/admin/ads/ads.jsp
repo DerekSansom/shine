@@ -7,7 +7,7 @@
 <html>
 	<jsp:include page="../adminHead.jsp"></jsp:include>
 	<body>
-		<h1>Boards locations</h1>
+		<h1>Adverts</h1>
 		<jsp:include page="../adminNav.jsp"></jsp:include>
 		<p>
 			<span id="err" style="color:red">${error}</span>

@@ -13,14 +13,17 @@
 			<span id="err" style="color:red">${error}</span>
 		</p>
 		
-	
+
+<p>use this page to remove default ads from a location</p>	
 <p>To add default adverts first select the <a href="${pageContext.request.contextPath}/mw/admin/adverts">advert</a></p>
 	
 	
 	<div id="global">	
 		<h3>Global default ads:</h3>
+		<p>These are the adverts shown by default on boards that do not yet have a location</p>
+		
 	<c:choose>
-		<c:when test="${empty global}">None</c:when>
+		<c:when test="${empty global}"><p>There are no global default ads</p></c:when>
 		<c:otherwise>
 		
 				<table class="sp-table-even-rows">

@@ -21,8 +21,6 @@ public class Area1 extends Location {
 	@JoinColumn(name = "countryId", insertable = false, updatable = false)
 	private Country country;
 
-	// private int countryId;
-
 	@OneToMany
 	@JoinColumn(name = "area1Id")
 	@LazyCollection(LazyCollectionOption.FALSE)

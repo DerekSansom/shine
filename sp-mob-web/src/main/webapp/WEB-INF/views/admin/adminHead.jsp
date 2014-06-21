@@ -3,7 +3,7 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Reports Admin</title>
+<title>SpAd min</title>
 <style type="text/css">
 tr.shade{
 background-color: #dddddd;

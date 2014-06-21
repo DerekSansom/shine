@@ -2,35 +2,14 @@
 <%@page import="com.shine.boards.Report"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-
 <!DOCTYPE html>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Streetpin Admin</title>
-<style type="text/css">
-
-</style>
-
-</head>
-<body>
-<h1>StreetPin Admin home</h1>
-
-<p>
-<span id="err" style="color:red">${error}</span>
-</p>
-
-
-
-<ul>
-
-<li><a href="${pageContext.request.contextPath}/mw/auth/logout">Log out</a></li>
-<li><a href="${pageContext.request.contextPath}/mw/admin/boards">boards</a></li>
-<li><a href="${pageContext.request.contextPath}/mw/admin/reports">reports</a></li>
-<li><a href="${pageContext.request.contextPath}/mw/admin/locations">locations</a></li>
-
-</ul>
-
-
+	<jsp:include page="adminHead.jsp"></jsp:include>
+	<body>
+		<h1>Admin Home</h1>
+		<jsp:include page="adminNav.jsp"></jsp:include>
+		<p>
+			<span id="err" style="color:red">${error}</span>
+		</p>
 </body>
 </html>
