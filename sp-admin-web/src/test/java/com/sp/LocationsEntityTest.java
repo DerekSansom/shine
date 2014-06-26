@@ -3,6 +3,7 @@ package com.sp;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import com.sp.locations.LocationsDao;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:test-context.xml" })
+@Ignore
 public class LocationsEntityTest {
 
 	@Autowired
@@ -41,5 +43,4 @@ public class LocationsEntityTest {
 		// assertNotNull(country.getDefaultAdParams());
 		// assertNotNull(country.getChildren().get(0).getDefaultAdParams());
 	}
-
 }
