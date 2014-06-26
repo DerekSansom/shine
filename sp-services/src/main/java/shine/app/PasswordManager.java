@@ -114,7 +114,7 @@ public class PasswordManager extends BaseHandler {
 
 	private String createLink(String token) {
 
-		return ShineProperties.getDomainUrl() + ":8080/shine/mw/passwordreset?token=" + token;
+		return ShineProperties.getDomainUrl() + "/shine/mw/passwordreset?token=" + token;
 	}
 
 	@Transactional

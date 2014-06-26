@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import shine.dao.exception.ShineException;
 
+import com.shine.GeneralError;
 import com.shine.boards.CorpBrand;
 import com.shine.boards.Notice;
 import com.shine.boards.NoticeBoard;
@@ -60,6 +61,12 @@ public abstract class BasePhoneServlet extends BaseServlet {
 			log.debug("doPost:unauthorised");
 			res.setStatus(HttpURLConnection.HTTP_UNAUTHORIZED);
 			return;
+		} catch (Exception e) {
+			resp = "" + GeneralError.SYSTEM_ERROR.getCode();
+			if (test) {
+				resp += ":" + e.getMessage();
+			}
+			res.setContentType(HTML_UTF8_CONTENT_TYPE);
 		}
 
 		log.debug(this.getClass().getSimpleName() + " sending response: " + resp);

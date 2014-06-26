@@ -28,7 +28,7 @@ public class UserDaoImpl implements UserDao{
 				UserEntity.class);
 		query.setParameter("credential", credential);
 		query.setParameter("password", password);
-		UserEntity user = query.getSingleResult();
+		UserEntity user = DaoUtils.getSingleResult(query);
 		return user;
 	}
 

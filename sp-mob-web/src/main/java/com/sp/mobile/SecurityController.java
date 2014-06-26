@@ -37,7 +37,7 @@ public class SecurityController {
 		} else {
 			model.put("error", "");
 		}
-		return "login";
+		return "portal/login";
 	}
 
 	@RequestMapping(value = "/loginfailed", method = RequestMethod.GET)
@@ -49,7 +49,7 @@ public class SecurityController {
 	@RequestMapping(value = "/denied", method = RequestMethod.GET)
 	public String getDeniedPage() {
 		logger.debug("Received request to show denied page");
-		return "deniedpage";
+		return "portal/denied";
 	}
 
 	@RequestMapping(value = "/loggedout", method = RequestMethod.GET)

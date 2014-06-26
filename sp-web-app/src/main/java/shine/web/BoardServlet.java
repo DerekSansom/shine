@@ -38,7 +38,6 @@ public class BoardServlet extends BasePhoneServlet {
 		if (boardId == 0 && noticeId == 0 && replyId == 0) {
 			throw new ShineException(GeneralError.PARAM_MISSING);
 		}
-		try {
 			List<ShineObject> list =
 					bm.getNoticeBoard(boardId, userId, noticeId, replyId, internaliseUsers);
 
@@ -62,12 +61,6 @@ public class BoardServlet extends BasePhoneServlet {
 			sb.append("</xml>");
 
 			return sb.toString();
-		} catch (ShineException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new ShineException(e);
-		} finally {
-		}
 
 	}
 

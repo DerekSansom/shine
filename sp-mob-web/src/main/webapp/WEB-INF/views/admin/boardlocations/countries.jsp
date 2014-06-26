@@ -13,17 +13,23 @@
 			<span id="err" style="color:red">${error}</span>
 		</p>
 		
-		
+
+<p>use this page to remove default ads from a location</p>	
+<p>To add default adverts first select the <a href="${pageContext.request.contextPath}/mw/admin/adverts">advert</a></p>
+	
+	
+	<div id="global">	
 		<h3>Global default ads:</h3>
+		<p>These are the adverts shown by default on boards that do not yet have a location</p>
+		
 	<c:choose>
-		<c:when test="${empty global}">None</c:when>
+		<c:when test="${empty global}"><p>There are no global default ads</p></c:when>
 		<c:otherwise>
 		
 				<table class="sp-table-even-rows">
 						<tr>
-							<th/>
 							<th>Id</th>
-							<th>Code</th>
+							<th>Title</th>
 							<th>Actions</th>
 						</tr>
 		
@@ -42,14 +48,16 @@
 			</table>
 		</c:otherwise>
 	</c:choose>
-		
+		</div>
+	
+	<div id="countries">	
 
 <h3>Default ads per country:</h3>
 
 		<table class="sp-table-even-rows">
 						<tr>
-							<th/>
-							<th>Id</th>
+							<th>Country</th>
+							<th>id</th>
 							<th>Code</th>
 							<th>Actions</th>
 						</tr>
@@ -70,7 +78,7 @@
 								<td>
 									<ul>
 										<c:forEach items="${country.defaultAdParams}" var="defaultAdParams">
-											<li><c:out value="${defaultAdParams.adId}"/>
+											<li><c:out value="${defaultAdParams.advert.id}"/>:<c:out value="${defaultAdParams.advert.title}"/>
 											<a class="action_btn" href="${pageContext.request.contextPath}/mw/admin/locations/country/${country.id}/defaultad/${defaultAdParams.adId}/remove">
 											<img src="${pageContext.request.contextPath}/img/fugue/icons/cross.png" alt="AutoLocate">
 												Remove
@@ -82,6 +90,6 @@
 							</tr>
 					</c:forEach>
 		</table>
-
+</div>
 	</body>
 </html>
