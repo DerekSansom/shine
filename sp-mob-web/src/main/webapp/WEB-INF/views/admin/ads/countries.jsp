@@ -70,7 +70,7 @@
 								<td>
 									<ul>
 										<c:choose>
-											<c:when test="${empty country.defaultAdParams }">None</c:when>
+											<c:when test="${empty country.defaultAdParams }"><p>no adverts set as default</p></c:when>
 											<c:otherwise>
 												<c:forEach items="${country.defaultAdParams}" var="defaultAdParams">
 													<li><c:out value="${defaultAdParams.advert.id}"/>:<c:out value="${defaultAdParams.advert.title}"/>

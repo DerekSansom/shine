@@ -141,19 +141,12 @@ public class BoardManager {
 	
 	public NoticeBoard getNoticeBoard(int id, int userid) throws ShineException {
 
-		try {
 			NoticeBoardEntity board = boardDao.getNoticeBoard(id);
 			return validatePopulateBoard(board, userid);
-		} catch (Exception e) {
-			log.debug("BoardManager.getNoticeBoard(" + id + ", " + userid + ")", e);
-			throw new ShineException(GeneralError.SYSTEM_ERROR, e.getMessage());
-		}
 			
 	}
 
 	private NoticeBoard validatePopulateBoard(NoticeBoardEntity board, int userid) throws ShineException {
-
-		try {
 
 			if (board == null || BooleanUtils.isFalse(board.getActive())) {
 				throw new ShineException(GeneralError.NOT_FOUND);
@@ -172,19 +165,12 @@ public class BoardManager {
 
 			return boardDto;
 
-		} catch (ShineException e) {
-			throw e;
-		}
-
 	}
 
 	@Transactional
 	public List<ShineObject> getNoticeBoard(int id, int userid, int noticeId, int replyId, boolean internaliseUsers)
 			throws ShineException {
 
-		// NoticeBoardDao ndao = new NoticeBoardDao(hibernateUtil.getSession());
-
-		try {
 			NoticeBoardEntity board = null;
 			if (id > 0) {
 				board = boardDao.getNoticeBoard(id);
@@ -227,12 +213,6 @@ public class BoardManager {
 			}
 			return list;
 
-		} catch (ShineException e) {
-			throw e;
-		} catch (Exception e) {
-			log.debug("BoardManager.getNoticeBoard(" + id + ", " + userid + ")", e);
-			throw new ShineException(GeneralError.SYSTEM_ERROR, e.getMessage());
-		}
 	}
 
 	private void populateNoticeDetails(NoticeBoard boardDto, int noticeIdToInclude, int count) {

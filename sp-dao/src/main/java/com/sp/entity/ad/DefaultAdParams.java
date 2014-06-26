@@ -97,4 +97,15 @@ public class DefaultAdParams implements Serializable {
 		this.advert = advert;
 	}
 
+	@Override
+	public String toString() {
+		return "DefaultAdParams [advert=" + advert.getId() +
+				boardId != null ? ", boardId=" + boardId : "" +
+				countryId != null ? ", countryId=" + countryId : "" +
+				area1Id != null ? ", area1Id=" + area1Id : "" +
+				area2Id != null ? ", area2Id=" + area2Id : "" +
+				area3Id != null ? ", area3Id=" + area3Id : "" +
+				"]";
+	}
+
 }

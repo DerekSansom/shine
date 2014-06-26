@@ -1,5 +1,6 @@
 package shine.app;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -49,17 +50,26 @@ public class AdServer {
 
 	private List<AdvertEntity> getDefaultAds(BoardLoc boardLocation, Integer[] adIdsToexclude, Integer[] catIdsToexclude, int numberReqd) {
 
-		List<DefaultAdParams> params;
-		if (boardLocation == null) {
-			params = defaultAdParamsDao.getNullLocationDefaultAdParams(numberReqd);
-
-		} else {
-			params = defaultAdParamsDao.getDefaultAdParams(boardLocation, adIdsToexclude, numberReqd);
-		}
+		List<DefaultAdParams> params = getDefaultAdParams(boardLocation, adIdsToexclude, numberReqd);
 
 		Integer[] ids = toDefaultAdIds(params);
 		List<AdvertEntity> ads = adDao.getAdvertsByIds(ids, catIdsToexclude);
 		return ads;
+	}
+
+	private List<DefaultAdParams> getDefaultAdParams(BoardLoc boardLocation, Integer[] adIdsToexclude, int numberReqd) {
+
+		List<DefaultAdParams> params;
+		if (boardLocation != null) {
+			params = defaultAdParamsDao.getDefaultAdParams(boardLocation, adIdsToexclude, numberReqd);
+			numberReqd -= params.size();
+		} else {
+			params = new ArrayList<DefaultAdParams>();
+		}
+		if(numberReqd > 0){
+			params.addAll(defaultAdParamsDao.getNullLocationDefaultAdParams(numberReqd));
+		}
+		return params;
 	}
 
 	private Integer[] toDefaultAdIds(List<DefaultAdParams> defaultAds) {
