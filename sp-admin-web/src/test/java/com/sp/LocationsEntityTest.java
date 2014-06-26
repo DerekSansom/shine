@@ -2,6 +2,8 @@ package com.sp;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +16,8 @@ import shine.app.BoardManager;
 import com.sp.board.BoardDao;
 import com.sp.entity.loc.Country;
 import com.sp.locations.LocationsDao;
+import com.sp.properties.PropertyDao;
+import com.sp.properties.PropertyEntity;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:test-context.xml" })
@@ -27,6 +31,8 @@ public class LocationsEntityTest {
 
 	@Autowired
 	private LocationsDao locationsDao;
+	@Autowired
+	private PropertyDao propertyDao;
 
 	@Before
 	public void setUp() throws Exception {
@@ -40,6 +46,14 @@ public class LocationsEntityTest {
 		assertNotNull(country.getChildren());
 		assertNotNull(country.getDefaultAdParams());
 		assertNotNull(country.getChildren().get(0).getDefaultAdParams());
+	}
+
+	@Test
+	public void testProperties() {
+		assertNotNull(propertyDao);
+		List<PropertyEntity> props = propertyDao.getAllProperties();
+		assertNotNull(props);
+		assertNotNull(props.get(0));
 	}
 
 }

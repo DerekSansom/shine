@@ -26,5 +26,6 @@
 		<class>com.sp.entity.auth.PasswordResetToken</class>
 		<class>com.sp.entity.UserEntity</class>
 		<class>com.sp.entity.AvailableCreditsEntity</class>
+		<class>com.sp.properties.PropertyEntity</class>
       </persistence-unit>
 </persistence>

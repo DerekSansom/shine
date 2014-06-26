@@ -124,3 +124,14 @@ create table password_reset_token(
 	created timestamp DEFAULT CURRENT_TIMESTAMP,
 	FOREIGN KEY (userid) REFERENCES player(id)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=340;
+
+
+create table properties(
+	id int unsigned not null primary key auto_increment,
+	pkey varchar(100) NOT NULL unique,
+	value text NOT NULL,
+	updated timestamp DEFAULT CURRENT_TIMESTAMP,
+	updatedById int(11) unsigned,
+	FOREIGN KEY (updatedById) REFERENCES users(id)
+);
+

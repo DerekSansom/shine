@@ -7,8 +7,11 @@ public class TrackObject {
 
 	private int client;
 
+	public TrackObject() {
+		this.client = 0;
+	}
+	
 	public TrackObject(int client) {
-		super();
 		this.client = client;
 	}
 
