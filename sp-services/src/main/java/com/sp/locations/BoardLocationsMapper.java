@@ -93,23 +93,12 @@ public class BoardLocationsMapper {
 		for (Location location : unlocatedLocations) {
 
 			StringBuilder sb = new StringBuilder(location.getName());
-			Location parentLoc = location;
-			if (parentLoc instanceof Area3) {
-				((Area3) parentLoc).setArea2(
-						ldao.getArea2(((Area3) parentLoc).getArea2Id()));
-				parentLoc = ((Area3) parentLoc).getArea2();
+			Location parentLoc = location.getParent();
+			while (parentLoc != null) {
 				sb.append(",").append(parentLoc.getName());
+				parentLoc = parentLoc.getParent();
 			}
-			if (parentLoc instanceof Area2) {
-				((Area2) parentLoc).setArea1(ldao.getArea1(((Area2) parentLoc).getArea1Id()));
-				parentLoc = ((Area2) parentLoc).getArea1();
-				sb.append(",").append(parentLoc.getName());
-			}
-			if (parentLoc instanceof Area1) {
-				((Area1) parentLoc).setCountry(ldao.getCountry(((Area1) parentLoc).getCountryId()));
-				parentLoc = ((Area1) parentLoc).getCountry();
-				sb.append(",").append(parentLoc.getName());
-			}
+
 			String address = sb.toString();
 			String strUrl = null;
 			try {
@@ -162,15 +151,15 @@ public class BoardLocationsMapper {
 
 		if (parent instanceof Area3) {
 			area3 = parent.getName();
-			parent = ((Area3) parent).getArea2();
+			parent = ((Area3) parent).getParent();
 		}
 		if (parent instanceof Area2) {
 			area2 = parent.getName();
-			parent = ((Area2) parent).getArea1();
+			parent = ((Area2) parent).getParent();
 		}
 		if (parent instanceof Area1) {
 			area1 = parent.getName();
-			parent = ((Area1) parent).getCountry();
+			parent = ((Area1) parent).getParent();
 		}
 		if (parent instanceof Country) {
 			country = parent.getName();
@@ -232,11 +221,11 @@ public class BoardLocationsMapper {
 
 				if (StringUtils.isNotEmpty(locd.getAdminarea2())) {
 
-					Area2 a2 = getArea2(locd.getAdminarea2(), a1.getId());
+					Area2 a2 = getArea2(locd.getAdminarea2(), a1);
 					locBoard.setArea2Id(a2.getId());
 
 					if (StringUtils.isNotEmpty(locd.getAdminarea3())) {
-						Area3 a3 = getArea3(locd.getAdminarea3(), a2.getId());
+						Area3 a3 = getArea3(locd.getAdminarea3(), a2);
 						locBoard.setArea3Id(a3.getId());
 					}
 
@@ -247,10 +236,10 @@ public class BoardLocationsMapper {
 				Area2 a2 = getArea2ByCountry(locd.getAdminarea2(), locd.getCountrycode());
 				if (a2 != null) {
 					locBoard.setArea2Id(a2.getId());
-					locBoard.setArea1Id(a2.getArea1().getId());
+					locBoard.setArea1Id(a2.getParent().getId());
 
 					if (StringUtils.isNotEmpty(locd.getAdminarea3())) {
-						Area3 a3 = getArea3(locd.getAdminarea3(), a2.getId());
+						Area3 a3 = getArea3(locd.getAdminarea3(), a2);
 						locBoard.setArea3Id(a3.getId());
 					}
 				}
@@ -266,9 +255,9 @@ public class BoardLocationsMapper {
 
 		List<Area2> candidates = ldao.searchLocs(Area2.class, adminarea2);
 		for (Area2 area2 : candidates) {
-			Area1 a1 = area2.getArea1();
+			Area1 a1 = area2.getParent();
 			if (a1 != null) {
-				Country c = a1.getCountry();
+				Country c = a1.getParent();
 				if (c != null) {
 					if (countrycode.equals(c.getCode())) {
 						return area2;
@@ -289,29 +278,29 @@ public class BoardLocationsMapper {
 		if (a1 == null) {
 			a1 = new Area1();
 			a1.setName(name);
-			a1.setCountry(country);
+			a1.setParent(country);
 			ldao.save(a1);
 		}
 		return a1;
 	}
 
-	private Area2 getArea2(String name, int area1id) throws ShineException {
-		Area2 area = ldao.getArea2(name, area1id);
+	private Area2 getArea2(String name, Area1 parent) throws ShineException {
+		Area2 area = ldao.getArea2(name, parent.getId());
 		if (area == null) {
 			area = new Area2();
 			area.setName(name);
-			area.setArea1Id(area1id);
+			area.setParent(parent);
 			ldao.save(area);
 		}
 		return area;
 	}
 
-	private Area3 getArea3(String name, int area2id) throws ShineException {
-		Area3 area = ldao.getArea3(name, area2id);
+	private Area3 getArea3(String name, Area2 parent) throws ShineException {
+		Area3 area = ldao.getArea3(name, parent.getId());
 		if (area == null) {
 			area = new Area3();
 			area.setName(name);
-			area.setArea2Id(area2id);
+			area.setParent(parent);
 			ldao.save(area);
 		}
 		return area;

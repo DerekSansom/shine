@@ -3,7 +3,6 @@ package com.sp;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +13,11 @@ import shine.app.BoardManager;
 
 import com.sp.board.BoardDao;
 import com.sp.entity.loc.Country;
+import com.sp.entity.loc.Location;
 import com.sp.locations.LocationsDao;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:test-context.xml" })
-@Ignore
 public class LocationsEntityTest {
 
 	@Autowired
@@ -40,7 +39,15 @@ public class LocationsEntityTest {
 		Country country = locationsDao.getCountry(1);
 		assertNotNull(country);
 		assertNotNull(country.getChildren());
-		// assertNotNull(country.getDefaultAdParams());
-		// assertNotNull(country.getChildren().get(0).getDefaultAdParams());
+		testLocation(country.getChildren().get(0));
+	}
+
+	private void testLocation(Location child) {
+		assertNotNull(child);
+		System.out.println(child.getName());
+		if (!child.getType().equals("area3")) {
+			assertNotNull(child.getChildren());
+			testLocation(child.getChildren().get(0));
+		}
 	}
 }

@@ -2,13 +2,15 @@ package com.sp.entity.loc;
 
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import com.sp.entity.ad.DefaultAdParams;
 
@@ -16,14 +18,13 @@ import com.sp.entity.ad.DefaultAdParams;
 @Table(name = "loc_area_3")
 public class Area3 extends Location {
 
-	@Transient
-	private Area2 area2;
+	@ManyToOne
+	@JoinColumn(name = "level_2_id", insertable = false, updatable = false)
+	private Area2 parent;
 
-	@Column(name = "level_2_id")
-	private int area2Id;
-
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany
 	@JoinColumn(name = "area3Id")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<DefaultAdParams> defaultAdParams;
 
 	public List<DefaultAdParams> getDefaultAdParams() {
@@ -34,20 +35,12 @@ public class Area3 extends Location {
 		this.defaultAdParams = defaultAdParams;
 	}
 
-	public Area2 getArea2() {
-		return area2;
+	public Area2 getParent() {
+		return parent;
 	}
 
-	public void setArea2(Area2 area2) {
-		this.area2 = area2;
-	}
-
-	public int getArea2Id() {
-		return area2Id;
-	}
-
-	public void setArea2Id(int area2Id) {
-		this.area2Id = area2Id;
+	public void setParent(Area2 parent) {
+		this.parent = parent;
 	}
 
 	@Override
@@ -55,10 +48,16 @@ public class Area3 extends Location {
 		if (getDescr() != null) {
 			return getDescr();
 		}
-		descr = new StringBuilder(name).append(", ").append(area2.toString()).append(", ")
-				.append(area2.getArea1().getCountry().toString())
+		descr = new StringBuilder(name).append(", ").append(parent.toString())
+				.append(", ").append(parent.getParent().getParent().toString())
 				.toString();
 		return descr;
+	}
+
+	@Override
+	@Transient
+	public List<? extends Location> getChildren() {
+		return null;
 	}
 
 }

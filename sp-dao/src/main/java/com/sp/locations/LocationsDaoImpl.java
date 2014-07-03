@@ -173,7 +173,8 @@ public class LocationsDaoImpl implements LocationsDao {
 	public Area2 getArea2(String name, int parentid) {
 
 		TypedQuery<Area2> query = entityManager.createQuery(
-				"from Area2 a where a.name=:name and a.area1Id=:parentid", Area2.class);
+				"from Area2 a where a.name=:name and a.area1.id=:parentid",
+				Area2.class);
 		query.setParameter("name", name);
 		query.setParameter("parentid", parentid);
 		return singleResultOrNull(query);
@@ -183,7 +184,7 @@ public class LocationsDaoImpl implements LocationsDao {
 	public Area3 getArea3(String name, int parentid) {
 
 		TypedQuery<Area3> query = entityManager.createQuery(
-				"from Area3 a where a.name=:name and a.area2Id=:parentid", Area3.class);
+				"from Area3 a where a.name=:name and a.area2.id=:parentid", Area3.class);
 		query.setParameter("name", name);
 		query.setParameter("parentid", parentid);
 		return singleResultOrNull(query);

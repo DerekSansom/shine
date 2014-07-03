@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import shine.dao.exception.ShineException;
 
+import com.sp.admin.locations.DefaultAdManager;
 import com.sp.advert.DefaultAdParamsDao;
 import com.sp.entity.ad.DefaultAdParams;
-import com.sp.entity.loc.Area1;
 import com.sp.entity.loc.Country;
 import com.sp.locations.BoardLocationsMapper;
 import com.sp.locations.LocationsDao;
@@ -32,6 +32,9 @@ public class DefaultAdsController {
 	private LocationsDao locationsDao;
 
 	@Autowired
+	private DefaultAdManager defaultAdManager;
+
+	@Autowired
 	private DefaultAdParamsDao defaultAdParamsDao;
 
 	@RequestMapping(value = "countries")
@@ -46,22 +49,14 @@ public class DefaultAdsController {
 		return "admin/boardlocations/countries";
 	}
 
-	@RequestMapping(value = "country/{countryid}/defaultads")
-	public String showCountry(@PathVariable("countryid") int countryId, Model model) throws ShineException {
 
-		Country country = locationsDao.getCountry(countryId);
-		List<Area1> area1s = locationsDao.getArea1ByCountry(countryId);
+	@RequestMapping(value = "{type}/{locationid}/defaultad/{adid}/remove")
+	public String removeDefaultAd(@PathVariable("locationid") int locationId, @PathVariable("adid") int adId,
+			@PathVariable("type") String type, Model model) throws ShineException {
 
-		model.addAttribute("country", country);
-
-		return "admin/boardlocations/countries";
-	}
-
-	@RequestMapping(value = "country/{countryid}/defaultad/{adid}/remove")
-	public String removeAd(@PathVariable("countryid") int countryId, @PathVariable("adid") int adId, Model model) throws ShineException {
-
-		defaultAdParamsDao.removeCountryDefaultAds(countryId, adId);
+		defaultAdManager.removeDefaultAd(adId, locationId, type);
 		return getLocations(model);
 	}
+
 
 }

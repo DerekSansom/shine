@@ -12,10 +12,8 @@
 		<p>
 			<span id="err" style="color:red">${error}</span>
 		</p>
-		
 		<p><a href="${pageContext.request.contextPath}/mw/admin/locations/finder">Run location finder</a></p>
 		<p><a href="${pageContext.request.contextPath}/mw/admin/locations/missing">List boards with incomplete locations</a></p>
-
-
+		<p><a href="${pageContext.request.contextPath}/mw/admin/locations/countries">Locations with Default Adverts</a></p>
 	</body>
 </html>

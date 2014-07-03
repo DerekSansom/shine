@@ -20,7 +20,7 @@ import com.sp.security.Role;
 
 @Controller
 @RequestMapping(value = "/admin/locations")
-public class BoardLocationController {
+public class LocationController {
 
 	private static Logger log = LoggerFactory.getLogger(BoardLocationsMapper.class);
 

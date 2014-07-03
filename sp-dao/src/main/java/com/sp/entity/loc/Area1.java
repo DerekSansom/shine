@@ -19,24 +19,24 @@ public class Area1 extends Location {
 
 	@ManyToOne
 	@JoinColumn(name = "countryId", insertable = false, updatable = false)
-	private Country country;
+	private Country parent;
 
 	@OneToMany
 	@JoinColumn(name = "area1Id")
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<DefaultAdParams> defaultAdParams;
 
-	// @OneToMany(fetch = FetchType.EAGER)
-	// @JoinColumn(name = "area1Id")
-	// private List<Area2> children;
-	//
-	// public List<Area2> getChildren() {
-	// return children;
-	// }
-	//
-	// public void setChildren(List<Area2> children) {
-	// this.children = children;
-	// }
+	@OneToMany(mappedBy = "area1")
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<Area2> children;
+
+	public List<Area2> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<Area2> children) {
+		this.children = children;
+	}
 
 	public List<DefaultAdParams> getDefaultAdParams() {
 		return defaultAdParams;
@@ -46,16 +46,16 @@ public class Area1 extends Location {
 		this.defaultAdParams = defaultAdParams;
 	}
 
-	public Country getCountry() {
-		return country;
+	public Country getParent() {
+		return parent;
 	}
 
-	public void setCountry(Country country) {
-		this.country = country;
+	public void setParent(Country parent) {
+		this.parent = parent;
 	}
 
 	public int getCountryId() {
-		return country.getId();
+		return parent.getId();
 	}
 
 	@Override
@@ -65,8 +65,9 @@ public class Area1 extends Location {
 		}
 
 		descr = new StringBuilder(name).append(", ")
-				.append(country.toString())
+				.append(parent.toString())
 				.toString();
 		return descr;
 	}
+
 }

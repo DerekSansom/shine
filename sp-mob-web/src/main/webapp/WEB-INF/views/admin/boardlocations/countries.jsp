@@ -57,37 +57,14 @@
 		<table class="sp-table-even-rows">
 						<tr>
 							<th>Country</th>
-							<th>id</th>
-							<th>Code</th>
-							<th>Actions</th>
+							<th/>
 						</tr>
 					
 					
-						<c:forEach items="${countries}" var="country">
-							<tr>
-								<td>
-									
-									<a href="${pageContext.request.contextPath}/mw/admin/locations/country/${country.id}/defaultads"><c:out value="${country.name}"/></a>
-								</td>
-								<td>
-									<c:out value="${country.id}"/>
-								</td>
-								<td>
-									<c:out value="${country.code}"/>
-								</td>
-								<td>
-									<ul>
-										<c:forEach items="${country.defaultAdParams}" var="defaultAdParams">
-											<li><c:out value="${defaultAdParams.advert.id}"/>:<c:out value="${defaultAdParams.advert.title}"/>
-											<a class="action_btn" href="${pageContext.request.contextPath}/mw/admin/locations/country/${country.id}/defaultad/${defaultAdParams.adId}/remove">
-											<img src="${pageContext.request.contextPath}/img/fugue/icons/cross.png" alt="AutoLocate">
-												Remove
-											</a>
-											</li>
-										</c:forEach>
-									</ul>
-								</td>
-							</tr>
+					<c:forEach items="${countries}" var="country">
+						<c:set var="location" scope="request" value="${country}"/>
+						<jsp:include page="locationf.jsp"/>
+															
 					</c:forEach>
 		</table>
 </div>
