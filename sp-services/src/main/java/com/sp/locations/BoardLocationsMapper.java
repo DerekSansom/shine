@@ -1,13 +1,6 @@
 package com.sp.locations;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.List;
 
@@ -42,7 +35,10 @@ public class BoardLocationsMapper {
 	private BoardDao boardDao;
 
 	@Autowired
-	private LocationsDao ldao;
+	private LocationsDao locationsDao;
+
+	@Autowired
+	private UrlUtils urlUtils;
 
 	@Transactional
 	public void updateBoardLocation(Integer id) throws ShineException {
@@ -54,11 +50,12 @@ public class BoardLocationsMapper {
 
 		NoticeBoardEntity nb = boardDao.getNoticeBoard(id);
 		if (nb != null) {
+			String strUrl = null;
 			try {
 				ShineLocation loc = new ShineLocation(nb.getLat(), nb.getLng());
-				String strUrl = googleRevCodeUrl + loc.getLat() + "," + loc.getLng();
+				strUrl = googleRevCodeUrl + loc.getLat() + "," + loc.getLng();
 				localLogger.info("Calling google with: " + strUrl);
-				InputStream is = getInputStream(strUrl);
+				InputStream is = urlUtils.getInputStream(strUrl);
 				// this is where it happens, extracting the loc details
 				if (is != null) {
 					LocDetails locd = getLocationDetails(is);
@@ -76,8 +73,10 @@ public class BoardLocationsMapper {
 				} else {
 					localLogger.warn("could not reach google to geocode boardid " + id);
 				}
+			} catch (NoLocationResultsException e) {
+				localLogger.error("boardid " + id + " : " + e.getMessage() + " : " + strUrl);
 			} catch (Exception e) {
-				localLogger.error(e.getClass() + ":" + e.getMessage());
+				localLogger.error("boardid " + id + ":" + e.getMessage());
 			}
 
 		} else {
@@ -89,27 +88,16 @@ public class BoardLocationsMapper {
 	@Transactional
 	public void getLocationsLocations() {
 
-		List<Location> unlocatedLocations = ldao.getUnlocatedLocations();
+		List<Location> unlocatedLocations = locationsDao.getUnlocatedLocations();
 		for (Location location : unlocatedLocations) {
 
 			StringBuilder sb = new StringBuilder(location.getName());
-			Location parentLoc = location;
-			if (parentLoc instanceof Area3) {
-				((Area3) parentLoc).setArea2(
-						ldao.getArea2(((Area3) parentLoc).getArea2Id()));
-				parentLoc = ((Area3) parentLoc).getArea2();
+			Location parentLoc = location.getParent();
+			while (parentLoc != null) {
 				sb.append(",").append(parentLoc.getName());
+				parentLoc = parentLoc.getParent();
 			}
-			if (parentLoc instanceof Area2) {
-				((Area2) parentLoc).setArea1(ldao.getArea1(((Area2) parentLoc).getArea1Id()));
-				parentLoc = ((Area2) parentLoc).getArea1();
-				sb.append(",").append(parentLoc.getName());
-			}
-			if (parentLoc instanceof Area1) {
-				((Area1) parentLoc).setCountry(ldao.getCountry(((Area1) parentLoc).getCountryId()));
-				parentLoc = ((Area1) parentLoc).getCountry();
-				sb.append(",").append(parentLoc.getName());
-			}
+
 			String address = sb.toString();
 			String strUrl = null;
 			try {
@@ -119,12 +107,19 @@ public class BoardLocationsMapper {
 				continue;
 			}
 
-			InputStream is = getInputStream(strUrl);
+			InputStream is = urlUtils.getInputStream(strUrl);
 			if (is == null) {
 				log.warn(strUrl + " returned NULL inputstream");
 				continue;
 			}
-			LocDetails locd = getLocationDetails(is);
+			LocDetails locd;
+			try {
+				locd = getLocationDetails(is);
+			} catch (NoLocationResultsException e) {
+				log.warn(strUrl + " returned noResultsException");
+				continue;
+			}
+
 			if (locd == null) {
 				log.warn(strUrl + " returned NULL LocDetails");
 				continue;
@@ -141,10 +136,9 @@ public class BoardLocationsMapper {
 			location.setLat(locd.getLat());
 			location.setLng(locd.getLng());
 			try {
-				ldao.save(location);
+				locationsDao.save(location);
 			} catch (Exception e) {
 				log.warn(" failed to save location" + location.toString(), e);
-
 			}
 		}
 	}
@@ -162,15 +156,15 @@ public class BoardLocationsMapper {
 
 		if (parent instanceof Area3) {
 			area3 = parent.getName();
-			parent = ((Area3) parent).getArea2();
+			parent = ((Area3) parent).getParent();
 		}
 		if (parent instanceof Area2) {
 			area2 = parent.getName();
-			parent = ((Area2) parent).getArea1();
+			parent = ((Area2) parent).getParent();
 		}
 		if (parent instanceof Area1) {
 			area1 = parent.getName();
-			parent = ((Area1) parent).getCountry();
+			parent = ((Area1) parent).getParent();
 		}
 		if (parent instanceof Country) {
 			country = parent.getName();
@@ -203,7 +197,7 @@ public class BoardLocationsMapper {
 		BoardLoc locBoard = getLocBoard(locd, id);
 		if (locBoard != null) {
 			try {
-				ldao.create(locBoard);
+				locationsDao.create(locBoard);
 			} catch (Exception e) {
 				log.error("Error setting loc to boardid: " + id + " - " + locBoard.toString(), e);
 			}
@@ -215,7 +209,7 @@ public class BoardLocationsMapper {
 
 		if (locd.getCountry() != null && locd.getCountrycode() != null) {
 
-			BoardLoc locBoard = ldao.getBoardLocation(boardid);
+			BoardLoc locBoard = locationsDao.getBoardLocation(boardid);
 			if (locBoard == null) {
 				locBoard = new BoardLoc();
 				locBoard.setBoardId(boardid);
@@ -232,11 +226,11 @@ public class BoardLocationsMapper {
 
 				if (StringUtils.isNotEmpty(locd.getAdminarea2())) {
 
-					Area2 a2 = getArea2(locd.getAdminarea2(), a1.getId());
+					Area2 a2 = getArea2(locd.getAdminarea2(), a1);
 					locBoard.setArea2Id(a2.getId());
 
 					if (StringUtils.isNotEmpty(locd.getAdminarea3())) {
-						Area3 a3 = getArea3(locd.getAdminarea3(), a2.getId());
+						Area3 a3 = getArea3(locd.getAdminarea3(), a2);
 						locBoard.setArea3Id(a3.getId());
 					}
 
@@ -247,10 +241,10 @@ public class BoardLocationsMapper {
 				Area2 a2 = getArea2ByCountry(locd.getAdminarea2(), locd.getCountrycode());
 				if (a2 != null) {
 					locBoard.setArea2Id(a2.getId());
-					locBoard.setArea1Id(a2.getArea1().getId());
+					locBoard.setArea1Id(a2.getParent().getId());
 
 					if (StringUtils.isNotEmpty(locd.getAdminarea3())) {
-						Area3 a3 = getArea3(locd.getAdminarea3(), a2.getId());
+						Area3 a3 = getArea3(locd.getAdminarea3(), a2);
 						locBoard.setArea3Id(a3.getId());
 					}
 				}
@@ -264,11 +258,11 @@ public class BoardLocationsMapper {
 
 	private Area2 getArea2ByCountry(String adminarea2, String countrycode) {
 
-		List<Area2> candidates = ldao.searchLocs(Area2.class, adminarea2);
+		List<Area2> candidates = locationsDao.searchLocs(Area2.class, adminarea2);
 		for (Area2 area2 : candidates) {
-			Area1 a1 = area2.getArea1();
+			Area1 a1 = area2.getParent();
 			if (a1 != null) {
-				Country c = a1.getCountry();
+				Country c = a1.getParent();
 				if (c != null) {
 					if (countrycode.equals(c.getCode())) {
 						return area2;
@@ -285,45 +279,45 @@ public class BoardLocationsMapper {
 //	}
 
 	private Area1 getArea1(String name, Country country) throws ShineException {
-		Area1 a1 = ldao.getArea1(name, country.getId());
+		Area1 a1 = locationsDao.getArea1(name, country.getId());
 		if (a1 == null) {
 			a1 = new Area1();
 			a1.setName(name);
-			a1.setCountry(country);
-			ldao.save(a1);
+			a1.setParent(country);
+			locationsDao.save(a1);
 		}
 		return a1;
 	}
 
-	private Area2 getArea2(String name, int area1id) throws ShineException {
-		Area2 area = ldao.getArea2(name, area1id);
+	private Area2 getArea2(String name, Area1 parent) throws ShineException {
+		Area2 area = locationsDao.getArea2(name, parent.getId());
 		if (area == null) {
 			area = new Area2();
 			area.setName(name);
-			area.setArea1Id(area1id);
-			ldao.save(area);
+			area.setParent(parent);
+			locationsDao.save(area);
 		}
 		return area;
 	}
 
-	private Area3 getArea3(String name, int area2id) throws ShineException {
-		Area3 area = ldao.getArea3(name, area2id);
+	private Area3 getArea3(String name, Area2 parent) throws ShineException {
+		Area3 area = locationsDao.getArea3(name, parent.getId());
 		if (area == null) {
 			area = new Area3();
 			area.setName(name);
-			area.setArea2Id(area2id);
-			ldao.save(area);
+			area.setParent(parent);
+			locationsDao.save(area);
 		}
 		return area;
 	}
 
 	private Country getCountry(String name, String code) throws ShineException {
-		Country c = ldao.getCountry(name, code);
+		Country c = locationsDao.getCountry(name, code);
 		if (c == null) {
 			c = new Country();
 			c.setName(name);
 			c.setCode(code);
-			ldao.save(c);
+			locationsDao.save(c);
 		}
 		return c;
 	}
@@ -348,48 +342,6 @@ public class BoardLocationsMapper {
 	// return null;
 	// }
 
-	private InputStream getInputStream(String urlStr) {
-
-		try {
-			URL uRL = new URL(urlStr);
-
-			URLConnection ucon = uRL.openConnection();
-			InputStream is = ucon.getInputStream();
-			String response = convertStreamToString(is);
-			ByteArrayInputStream bais = new ByteArrayInputStream(response.getBytes());
-			return bais;
-
-		} catch (Throwable e) {
-			log.warn("Could not reach google apis" + e.getMessage());
-		}
-		return null;
-	}
-
-	private static String convertStreamToString(InputStream is) {
-		/*
-		 * To convert the InputStream to String we use the
-		 * BufferedReader.readLine() method. We iterate until the BufferedReader
-		 * return null which means there's no more data to read. Each line will
-		 * appended to a StringBuilder and returned as String.
-		 */
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		StringBuilder sb = new StringBuilder();
-
-		String line = null;
-		try {
-			while ((line = reader.readLine()) != null) {
-				sb.append(line + "\n");
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				is.close();
-			} catch (IOException e) {
-			}
-		}
-		return sb.toString();
-	}
 
 	@Transactional
 	public void populateCountryOnlyBoards() {

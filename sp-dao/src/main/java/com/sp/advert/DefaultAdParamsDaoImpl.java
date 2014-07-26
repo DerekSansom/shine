@@ -57,7 +57,7 @@ public class DefaultAdParamsDaoImpl implements DefaultAdParamsDao {
 		predictates.add(getLocationRestrictions(criteriaBuilder, locRoot, boardLocation));
 
 		if (adIdsToexclude.length > 0) {
-			Expression<Integer> adIds = locRoot.get("adId");
+			Expression<Integer> adIds = locRoot.get("advert").get("id");
 			predictates.add(criteriaBuilder.not(adIds.in((Object[]) adIdsToexclude)));
 
 		}

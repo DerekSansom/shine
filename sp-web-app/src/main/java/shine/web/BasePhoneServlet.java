@@ -53,7 +53,7 @@ public abstract class BasePhoneServlet extends BaseServlet {
 			log.error("doPost:shineException: " + e.getCode(), e);
 			resp = "" + e.getCode();
 			if (test) {
-				resp += ":" + e.getMessage();
+				resp += translateError(e);
 			}
 			res.setContentType(HTML_UTF8_CONTENT_TYPE);
 
@@ -62,6 +62,7 @@ public abstract class BasePhoneServlet extends BaseServlet {
 			res.setStatus(HttpURLConnection.HTTP_UNAUTHORIZED);
 			return;
 		} catch (Exception e) {
+			log.error("From doPost", e);
 			resp = "" + GeneralError.SYSTEM_ERROR.getCode();
 			if (test) {
 				resp += ":" + e.getMessage();
@@ -73,6 +74,16 @@ public abstract class BasePhoneServlet extends BaseServlet {
 		res.getWriter().print(resp);
 		res.getWriter().close();
 
+	}
+
+	private String translateError(ShineException e) {
+		StringBuilder sb = new StringBuilder();
+		if (e.getError() != null) {
+			sb.append(":").append(e.getError().getDescription());
+		}
+		sb.append(":").append(e.getMessage());
+
+		return sb.toString();
 	}
 
 	protected String getDefaultContentType() {

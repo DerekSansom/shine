@@ -1,5 +1,6 @@
 package com.shine;
 
+import com.shine.error.AuthError;
 import com.shine.error.RegistrationError;
 
 public class SharedConstants {
@@ -77,7 +78,7 @@ public class SharedConstants {
 	public static final ShineError REG_FAILED_PASSWORD_REQUIRED = RegistrationError.PASSWORD_REQUIRED;
 	public static final ShineError REG_FAILED_PASSWORD_LENGTH = RegistrationError.PASSWORD_LENGTH;
 
-	public static final int LOG_IN_FAILED = -20;
+	public static final ShineError LOG_IN_FAILED = AuthError.LOG_IN_FAILED;
 
 	public static final int STD_FIELD_TEXT_LENGTH = 50;
 	public static final int PWD_MAX_LENGTH = 20;

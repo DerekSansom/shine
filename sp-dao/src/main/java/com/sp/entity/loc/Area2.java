@@ -2,13 +2,15 @@ package com.sp.entity.loc;
 
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import com.sp.entity.ad.DefaultAdParams;
 
@@ -16,25 +18,25 @@ import com.sp.entity.ad.DefaultAdParams;
 @Table(name = "loc_area_2")
 public class Area2 extends Location {
 
-	@Transient
+	@ManyToOne
+	@JoinColumn(name = "level_1_id", insertable = false, updatable = false)
 	private Area1 area1;
 
 	@OneToMany(fetch = FetchType.EAGER)
 	@JoinColumn(name = "area2Id")
 	private List<DefaultAdParams> defaultAdParams;
 
-	//
-	// @OneToMany(fetch = FetchType.EAGER)
-	// @JoinColumn(name = "area2Id")
-	// private List<Area3> children;
-	//
-	// public List<Area3> getChildren() {
-	// return children;
-	// }
-	//
-	// public void setChildren(List<Area3> children) {
-	// this.children = children;
-	// }
+	@OneToMany(mappedBy = "parent")
+	@LazyCollection(LazyCollectionOption.FALSE)
+	private List<Area3> children;
+
+	public List<Area3> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<Area3> children) {
+		this.children = children;
+	}
 
 	public List<DefaultAdParams> getDefaultAdParams() {
 		return defaultAdParams;
@@ -44,23 +46,20 @@ public class Area2 extends Location {
 		this.defaultAdParams = defaultAdParams;
 	}
 
-	@Column(name = "level_1_id")
-	private int area1Id;
+	// public Area1 getArea1() {
+	// return area1;
+	// }
+	//
+	// public void setArea1(Area1 area1) {
+	// this.area1 = area1;
+	// }
 
-	public Area1 getArea1() {
+	public Area1 getParent() {
 		return area1;
 	}
 
-	public void setArea1(Area1 area1) {
+	public void setParent(Area1 area1) {
 		this.area1 = area1;
-	}
-
-	public int getArea1Id() {
-		return area1Id;
-	}
-
-	public void setArea1Id(int area1Id) {
-		this.area1Id = area1Id;
 	}
 
 	@Override
@@ -69,7 +68,7 @@ public class Area2 extends Location {
 			return descr;
 		}
 		descr = new StringBuilder(name).append(", ")
-				.append(area1.getCountry().toString())
+				.append(area1.getParent().toString())
 				.toString();
 		return descr;
 	}

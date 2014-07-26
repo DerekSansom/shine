@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 
 import com.sp.entity.ad.DefaultAdParams;
 
@@ -25,6 +26,9 @@ public abstract class Location {
 	protected String descr;
 
 	protected String name;
+
+	@Transient
+	protected String type;
 
 	public int getId() {
 		return id;
@@ -62,6 +66,17 @@ public abstract class Location {
 		this.descr = descr;
 	}
 
+	public String getType() {
+		if (type == null) {
+			type = getClass().getSimpleName().toLowerCase();
+		}
+		return type;
+	}
+
 	public abstract List<DefaultAdParams> getDefaultAdParams();
+
+	public abstract List<? extends Location> getChildren();
+
+	public abstract <P extends Location> P getParent();
 
 }

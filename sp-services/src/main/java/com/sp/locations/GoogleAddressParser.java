@@ -103,7 +103,7 @@ public class GoogleAddressParser extends DefaultHandler {
 		}
 		if ("status".equals(localName) || "status".equals(name)) {
 			if ("ZERO_RESULTS".equals(characters)) {
-				throw new IllegalStateException("ZERO_RESULTS");
+				throw new NoLocationResultsException("ZERO_RESULTS");
 			}
 		}
 		if ("long_name".equals(localName) || "long_name".equals(name)) {

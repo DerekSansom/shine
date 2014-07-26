@@ -23,7 +23,7 @@ public class Country extends Location {
 	@JoinColumn(name = "countryId")
 	private List<DefaultAdParams> defaultAdParams;
 
-	@OneToMany(mappedBy = "country")
+	@OneToMany(mappedBy = "parent")
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<Area1> children;
 
@@ -57,6 +57,11 @@ public class Country extends Location {
 			return name;
 		}
 		return descr;
+	}
+
+	@Override
+	public <P extends Location> P getParent() {
+		return null;
 	}
 
 }

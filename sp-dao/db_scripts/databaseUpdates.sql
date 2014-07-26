@@ -131,7 +131,7 @@ create table properties(
 	pkey varchar(100) NOT NULL unique,
 	value text NOT NULL,
 	updated timestamp DEFAULT CURRENT_TIMESTAMP,
-	updatedById int(11) unsigned,
+	updatedById int(11),
 	FOREIGN KEY (updatedById) REFERENCES users(id)
 );
 
