@@ -137,7 +137,7 @@ public class AdvertController extends PortalBaseController {
 			}
 		}
 
-		return (showAdvert(ad.getId(), model, principal));
+		return "redirect:id/" + ad.getId();
 	}
 
 	@RequestMapping(value = "/id/{adid}")

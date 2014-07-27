@@ -34,7 +34,11 @@ public class UrlUtils {
 				String response = convertStreamToString(is);
 				System.out.println(response);
 				ByteArrayInputStream bais = new ByteArrayInputStream(response.getBytes());
+<<<<<<< HEAD
 				return bais;
+=======
+			return bais;
+>>>>>>> 482eb53fad7036601388e8d65c7f5a704415ab05
 			} else {
 				return is;
 			}
@@ -47,10 +51,15 @@ public class UrlUtils {
 
 	private static String convertStreamToString(InputStream is) {
 		/*
+<<<<<<< HEAD
 		 * To convert the InputStream to String we use the
 		 * BufferedReader.readLine() method. We iterate until the BufferedReader
 		 * return null which means there's no more data to read. Each line will
 		 * appended to a StringBuilder and returned as String.
+=======
+		 * To convert the InputStream to String we use the BufferedReader.readLine() method. We iterate until the BufferedReader return null
+		 * which means there's no more data to read. Each line will appended to a StringBuilder and returned as String.
+>>>>>>> 482eb53fad7036601388e8d65c7f5a704415ab05
 		 */
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 		StringBuilder sb = new StringBuilder();
@@ -71,4 +80,8 @@ public class UrlUtils {
 		return sb.toString();
 	}
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 482eb53fad7036601388e8d65c7f5a704415ab05

@@ -2,7 +2,12 @@ package com.sp.locations;
 
 public class GoogleResultStrings {
 
+<<<<<<< HEAD
 	static final String FIFTY_1_ZERO = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+=======
+
+	static final String FIFTY_1_ZERO = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+
+>>>>>>> 482eb53fad7036601388e8d65c7f5a704415ab05
 			"<GeocodeResponse>" +
 			"<status>OK</status>" +
 			"<result>" +
@@ -454,5 +459,10 @@ public class GoogleResultStrings {
 			"</geometry>" +
 			"</result>" +
 			"</GeocodeResponse>";
+<<<<<<< HEAD
 
 }
+=======
+	
+}
+>>>>>>> 482eb53fad7036601388e8d65c7f5a704415ab05

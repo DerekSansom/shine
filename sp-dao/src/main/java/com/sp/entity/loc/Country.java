@@ -63,5 +63,4 @@ public class Country extends Location {
 	public <P extends Location> P getParent() {
 		return null;
 	}
-
 }

@@ -1,5 +1,8 @@
 package com.sp.locations;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 482eb53fad7036601388e8d65c7f5a704415ab05
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -60,7 +63,11 @@ public class BoardLocationsMapperTest {
 		when(urlUtils.getInputStream(anyString())).thenReturn(new ByteArrayInputStream(NO_RESULTS.getBytes()));
 
 		mapper.updateBoardLocation(boardId, log);
+<<<<<<< HEAD
 
+=======
+		
+>>>>>>> 482eb53fad7036601388e8d65c7f5a704415ab05
 		verify(log).error("boardid 1 : ZERO_RESULTS : http://maps.googleapis.com/maps/api/geocode/xml?sensor=false&latlng=0.0,0.0");
 	}
 
@@ -88,4 +95,8 @@ public class BoardLocationsMapperTest {
 		verify(log, never()).error(anyString());
 	}
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 482eb53fad7036601388e8d65c7f5a704415ab05

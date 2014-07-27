@@ -1,4 +1,8 @@
 package com.sp.locations;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 482eb53fad7036601388e8d65c7f5a704415ab05
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

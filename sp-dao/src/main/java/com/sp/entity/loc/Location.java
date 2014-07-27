@@ -12,8 +12,9 @@ import javax.persistence.Transient;
 import com.sp.entity.ad.DefaultAdParams;
 
 @MappedSuperclass
-public abstract class Location {
-
+public abstract class Location
+// <Parent extends Location>
+{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,7 +68,7 @@ public abstract class Location {
 	}
 
 	public String getType() {
-		if (type == null) {
+		if(type == null){
 			type = getClass().getSimpleName().toLowerCase();
 		}
 		return type;

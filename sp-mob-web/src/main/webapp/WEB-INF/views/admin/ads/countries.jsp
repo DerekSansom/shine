@@ -28,16 +28,40 @@
 
 <div id="global">				
 <h3>Global default ads:</h3>
-	<a href="${pageContext.request.contextPath}/mw/admin/adverts/${advert.id}/global/0/set">Use this advert as a global default</a>
 	<c:choose>
-		<c:when test="${empty global }">None</c:when>
+		<c:when test="${empty global }">No global default adds set</c:when>
 		<c:otherwise>
+			<p>Current default global ads</p>
 			<ul>
 				<c:forEach items="${global}" var="defaultAdParams">
-					<li><c:out value="${defaultAdParams.advert.id}"/>:<c:out value="${defaultAdParams.advert.title}"/>
+					<li>
+						<c:choose>
+							<c:when test="${defaultAdParams.advert.id == advert.id}">
+								<c:set var="current">true</c:set>
+								<strong>* <c:out value="${defaultAdParams.advert.id}"/>:<c:out value="${defaultAdParams.advert.title}"/>
+								
+									<a href="${pageContext.request.contextPath}/mw/admin/adverts/${advert.id}/global/0/remove">
+										<img src="${pageContext.request.contextPath}/img/fugue/icons/cross.png" alt="remove">Remove
+									</a>
+								</strong>
+							</c:when>
+							<c:otherwise>
+								<c:out value="${defaultAdParams.advert.id}"/>:<c:out value="${defaultAdParams.advert.title}"/>
+							</c:otherwise>
+						</c:choose>
 					</li>
 				</c:forEach>
 			</ul>
+		</c:otherwise>
+	</c:choose>
+
+	<c:choose>
+		<c:when test="${current}">
+				<c:set var="current">false</c:set>
+		</c:when>
+		<c:otherwise>
+			<a href="${pageContext.request.contextPath}/mw/admin/adverts/${advert.id}/global/0/set">
+			<img src="${pageContext.request.contextPath}/img/fugue/icons/target.png" alt="set global">Use this advert as a global default</a>
 		</c:otherwise>
 	</c:choose>
 
@@ -48,45 +72,19 @@
 
 
 <div id="countries">				
-<h4>Use this advert as default for:</h4>
+<h3>Country default ads:</h3>
 		<table class="sp-table-even-rows">
-						<tr>
-							<th/>
-							<th/>
-							<th>Current Default Ads</th>
-							<th/>
-						</tr>
+				<tr>
+					<th/>
+					<th>Current Default Ads</th>
+					<th/>
+				</tr>
 			
-					
-						<c:forEach items="${countries}" var="country">
-							<tr>
-								<td>
-									
-									<a href="${pageContext.request.contextPath}/mw/admin/adverts/${advert.id}/country/${country.id}"><c:out value="${country.name}"/></a>
-								</td>
-								<td>
-									<c:out value="${country.code}"/>
-								</td>
-								<td>
-									<ul>
-										<c:choose>
-											<c:when test="${empty country.defaultAdParams }"><p>no adverts set as default</p></c:when>
-											<c:otherwise>
-												<c:forEach items="${country.defaultAdParams}" var="defaultAdParams">
-													<li><c:out value="${defaultAdParams.advert.id}"/>:<c:out value="${defaultAdParams.advert.title}"/>
-													</li>
-												</c:forEach>
-											</c:otherwise>
-										</c:choose>
-									</ul>
-								</td>
-								<td>
-									<a href="${pageContext.request.contextPath}/mw/admin/adverts/${advert.id}/country/${country.id}/set">
-										<img src="${pageContext.request.contextPath}/img/fugue/icons/target.png" alt="Target">Set as default
-									</a>
-								</td>
-							</tr>
-					</c:forEach>
+				<c:forEach items="${countries}" var="country">
+					<c:set var="location" scope="request" value="${country}"/>
+					<jsp:include page="locationf.jsp"/>
+											
+			</c:forEach>
 		</table>
 		
 		<p>To edit country ads (i.e. remove any) go <a href="${pageContext.request.contextPath}/mw/admin/locations/countries">here</a></p>

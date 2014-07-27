@@ -2,3 +2,10 @@
 #ad, #countries, #global{
 	border: thin solid #666666;
 }
+td{
+	vertical-align: top;
+}
+
+li{
+	min-height: 3em;
+}
