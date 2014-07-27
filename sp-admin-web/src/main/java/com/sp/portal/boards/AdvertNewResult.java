@@ -12,7 +12,6 @@ public class AdvertNewResult {
 	
 	public AdvertNewResult(List<CorpBrand> userBrands,
 			List<AdCategory> adCategories) {
-		super();
 		this.userBrands = userBrands;
 		this.adCategories = adCategories;
 	}

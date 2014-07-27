@@ -26,7 +26,7 @@ import com.sp.security.Role;
 
 @Controller
 @RequestMapping(value = "/admin/adverts")
-public class AdController {
+public class DefaultAdLocationController {
 
 	private static final int DEFAULT_TO_SHOW = 500;
 
@@ -44,7 +44,6 @@ public class AdController {
 	public String showads(Model model) throws ShineException {
 
 		List<AdvertEntity> ads = advertDao.getAllAdverts(0, DEFAULT_TO_SHOW);
-System.out.println("wadverts");
 		model.addAttribute("adverts", ads);
 		return "admin/ads/ads";
 	}

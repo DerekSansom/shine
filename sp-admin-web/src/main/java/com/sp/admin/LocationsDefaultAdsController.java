@@ -24,7 +24,7 @@ import com.sp.security.Role;
 @Controller
 @RequestMapping(value = "/admin/locations/")
 @Secured(Role.ADMIN)
-public class DefaultAdsController {
+public class LocationsDefaultAdsController {
 
 	private static Logger log = LoggerFactory.getLogger(BoardLocationsMapper.class);
 

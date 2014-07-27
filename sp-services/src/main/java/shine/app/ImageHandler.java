@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
@@ -29,6 +30,7 @@ import com.sp.entity.CorpBrandEntity;
 import com.sp.entity.NoticeEntity;
 import com.sp.entity.PlayerEntity;
 import com.sp.entity.ad.AdvertEntity;
+import com.sp.img.ImageScaler;
 import com.sp.notice.NoticeDao;
 import com.sp.player.PlayerDao;
 
@@ -51,6 +53,9 @@ public class ImageHandler extends BaseHandler {
 	private PlayerDao playerDao;
 
 	@Autowired
+	private ImageScaler imageScaler;
+
+	@Autowired
 	private BrandDao brandDao;
 
 	// @Transactional
@@ -68,6 +73,12 @@ public class ImageHandler extends BaseHandler {
 	//
 	// return SharedConstants.SUCCESS;
 	// }
+
+	public String saveAdImage(InputStream is, int adid) throws IOException, ShineException {
+		BufferedImage bufferedImage = imageScaler.scaleImage(is, ShineProperties.maxImageDimension());
+		saveImage(bufferedImage, ShineProperties.getAdImageFolderPath(), adid);
+		return adid + IMG_TAG;
+	}
 
 	@Transactional
 	public void handleUserImage(BufferedImage bufferedImage, int userid) throws ShineException {
@@ -100,7 +111,7 @@ public class ImageHandler extends BaseHandler {
 
 	}
 
-	private void saveImage(BufferedImage bufferedImage, String path, int id) throws ShineException {
+	private String saveImage(BufferedImage bufferedImage, String path, int id) throws ShineException {
 
 		File f = new File(path + id + IMG_TAG);
 
@@ -112,7 +123,7 @@ public class ImageHandler extends BaseHandler {
 			log.error("Saving image", e);
 			throw new ShineException(e);
 		}
-
+		return f.getAbsolutePath();
 	}
 
 	// @Transactional

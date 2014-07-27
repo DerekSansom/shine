@@ -37,7 +37,7 @@
 		<div>
 			<ul>
 				<li><a href="${pageContext.request.contextPath}/mw/portal/adverts">Existing adverts</a></li>
-				<li><a href="${pageContext.request.contextPath}/mw/portal/adverts/new">Create new advert</a></li>
+				<li><a href="${pageContext.request.contextPath}/mw/portal/adverts/create">Create new advert</a></li>
 			</ul>
 		</div>
 		<h3>Credits</h3>

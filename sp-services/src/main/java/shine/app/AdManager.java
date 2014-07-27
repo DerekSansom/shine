@@ -73,6 +73,12 @@ public class AdManager extends BaseHandler {
 		return adverts;
 	}
 
+	public Advert getAdvert(int id) {
+		AdvertEntity entity = advertDao.getAd(id);
+		Advert advert = mapper.entityToDto(entity);
+		return advert;
+	}
+
 	public List<Advert> getAdvertsByBrandIds(List<Integer> brandIds) throws ShineException {
 		List<AdvertEntity> advertEntities = advertDao.getAdvertsByBrandIds(brandIds);
 		List<Advert> adverts = mapper.entityToDto(advertEntities);

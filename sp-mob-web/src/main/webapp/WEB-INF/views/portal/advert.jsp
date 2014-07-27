@@ -32,7 +32,7 @@
 		</div>
 
 		<div class="sp-page-content">
-			<jsp:include page="../forms/create-advert.jsp"></jsp:include>
+			<jsp:include page="../jspx/show-advert.jsp"></jsp:include>
 		</div>
 		
 		<div class="sp-page-footer">
